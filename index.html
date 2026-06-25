@@ -4,21 +4,27 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Pensionskonto-Rechner</title>
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg: #0f1b14;
-    --panel: #16261d;
-    --line: #2a3c30;
-    --text: #eef2ec;
-    --muted: #9fb3a6;
-    --accent: #c8a45d;
-    --accent2: #5d8c6b;
-    --warn: #e06458;
+    --bg: #f0f4f8;
+    --panel: #ffffff;
+    --panel2: #e8eef5;
+    --line: #c8d5e3;
+    --text: #1a2a3a;
+    --muted: #6b8099;
+    --accent: #355f8f;
+    --accent-light: #4a7ab5;
+    --grey: #b2b2b2;
+    --warn: #c0392b;
+    --warn-light: #e74c3c;
+    --warn-bg: #fdf2f2;
+    --warn-border: #f5c6c6;
   }
   *{box-sizing:border-box;}
   body{
     margin:0;
-    font-family: 'Georgia', 'Iowan Old Style', serif;
+    font-family: 'Lato', Arial, sans-serif;
     background: var(--bg);
     color: var(--text);
     padding: 0;
@@ -29,60 +35,64 @@
     padding: 40px 24px 80px;
   }
   header{
-    border-bottom: 1px solid var(--line);
-    padding-bottom: 24px;
-    margin-bottom: 32px;
+    background: var(--accent);
+    color: #fff;
+    padding: 32px 24px 28px;
+    margin: -40px -24px 32px;
+    border-radius: 0 0 8px 8px;
   }
   .eyebrow{
-    font-family: 'Helvetica Neue', Arial, sans-serif;
     font-size: 11px;
     letter-spacing: 0.2em;
     text-transform: uppercase;
-    color: var(--accent);
+    color: var(--grey);
     margin-bottom: 8px;
   }
   h1{
-    font-size: 32px;
+    font-size: 30px;
     margin: 0 0 8px;
-    font-weight: 400;
+    font-weight: 900;
     letter-spacing: 0.01em;
+    color: #fff;
   }
   .sub{
-    font-family: 'Helvetica Neue', Arial, sans-serif;
-    color: var(--muted);
+    color: rgba(255,255,255,0.75);
     font-size: 14px;
     line-height: 1.6;
     max-width: 56ch;
+    font-weight: 300;
   }
-  .grid{
-    display:grid;
-    gap: 18px;
+  .card{
+    background: var(--panel);
+    border-radius: 8px;
+    padding: 24px;
+    box-shadow: 0 1px 4px rgba(53,95,143,0.08);
+    margin-bottom: 20px;
   }
-  .field{
-    display:flex;
-    flex-direction: column;
-    gap: 6px;
-  }
+  .grid{ display:grid; gap: 18px; }
+  .field{ display:flex; flex-direction: column; gap: 6px; }
   label{
-    font-family: 'Helvetica Neue', Arial, sans-serif;
     font-size: 13px;
     color: var(--muted);
     letter-spacing: 0.02em;
+    font-weight: 700;
+    text-transform: uppercase;
   }
   input, select, textarea{
-    background: var(--panel);
+    background: var(--panel2);
     border: 1px solid var(--line);
     border-radius: 4px;
     color: var(--text);
     padding: 11px 12px;
     font-size: 16px;
-    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-family: 'Lato', Arial, sans-serif;
     width: 100%;
     transition: border-color 0.15s;
   }
   input:focus, select:focus, textarea:focus{
     outline: none;
     border-color: var(--accent);
+    background: #fff;
   }
   .row2{
     display:grid;
@@ -92,147 +102,219 @@
   @media (max-width: 540px){
     .row2{ grid-template-columns: 1fr; }
   }
-  button{
-    margin-top: 28px;
+  button.primary{
+    margin-top: 8px;
     width: 100%;
     background: var(--accent);
-    color: #1a1208;
+    color: #fff;
     border: none;
     border-radius: 4px;
     padding: 16px;
-    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-family: 'Lato', Arial, sans-serif;
     font-size: 15px;
     font-weight: 700;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
     cursor: pointer;
-    transition: filter 0.15s, transform 0.05s;
+    transition: background 0.15s, transform 0.05s;
   }
-  button:hover{ filter: brightness(1.08); }
-  button:active{ transform: translateY(1px); }
+  button.primary:hover{ background: var(--accent-light); }
+  button.primary:active{ transform: translateY(1px); }
 
   .result{
-    margin-top: 36px;
-    border-top: 1px solid var(--line);
-    padding-top: 28px;
+    margin-top: 8px;
     display: none;
   }
   .result.visible{ display: block; }
 
   .detail-table{
     width:100%;
-    font-family: 'Helvetica Neue', Arial, sans-serif;
     font-size: 14px;
     border-collapse: collapse;
-    margin-bottom: 28px;
+    margin-bottom: 4px;
   }
   .detail-table td{
-    padding: 10px 0;
+    padding: 9px 0;
     border-bottom: 1px solid var(--line);
   }
   .detail-table td:first-child{ color: var(--muted); }
-  .detail-table td:last-child{ text-align: right; font-variant-numeric: tabular-nums; }
+  .detail-table td:last-child{ text-align: right; font-variant-numeric: tabular-nums; font-weight: 700; }
 
-  .block{
-    padding: 22px 20px;
-    border: 1px solid var(--line);
-    border-radius: 6px;
+  /* Gehalt Block */
+  .gehalt-block {
+    background: var(--accent);
+    border-radius: 8px;
+    padding: 22px 24px;
     margin-bottom: 16px;
+    color: #fff;
   }
-  .block .label{
-    font-family: 'Helvetica Neue', Arial, sans-serif;
-    font-size: 12px;
-    letter-spacing: 0.12em;
+  .gehalt-block .block-label {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.65);
+    margin-bottom: 8px;
+    font-weight: 700;
+  }
+  .gehalt-block .value-main {
+    font-size: 42px;
+    font-weight: 900;
+    line-height: 1;
+  }
+  .gehalt-block .value-main span { font-size: 18px; font-weight: 300; }
+  .gehalt-block .value-sub {
+    font-size: 16px;
+    color: rgba(255,255,255,0.7);
+    margin-top: 6px;
+    font-weight: 300;
+  }
+
+  /* Section title */
+  .section-title {
+    font-size: 11px;
+    letter-spacing: 0.15em;
     text-transform: uppercase;
     color: var(--muted);
-    margin-bottom: 6px;
-  }
-  .block .value{
-    font-size: 30px;
-    font-weight: 400;
-  }
-  .block .value span{ font-size: 16px; color: var(--muted); }
-
-  .block.nominal{
-    background: rgba(255,255,255,0.02);
-  }
-  .block.nominal .value.netto{
-    font-size: 40px;
-    color: var(--accent);
-  }
-  .block.nominal .value.brutto{
-    font-size: 18px;
-    color: var(--muted);
-    margin-top: 4px;
+    margin-bottom: 10px;
+    font-weight: 700;
   }
 
-  .block.real{
-    background: linear-gradient(180deg, rgba(224,100,88,0.07), rgba(224,100,88,0));
-    border-color: rgba(224,100,88,0.35);
+  /* Compare grid */
+  .compare-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
   }
-  .block.real .value{
-    color: var(--warn);
-    font-size: 40px;
-  }
-  .block.real .value.brutto{
-    font-size: 16px;
-    color: var(--muted);
-    margin-top: 4px;
-    font-weight: 400;
-  }
-  .block.real .insight{
-    font-family: 'Helvetica Neue', Arial, sans-serif;
-    font-size: 14px;
-    color: var(--text);
-    margin-top: 12px;
-    line-height: 1.6;
+  @media (max-width: 500px) {
+    .compare-grid { grid-template-columns: 1fr; }
   }
 
-  .luecke{
-    font-family: 'Helvetica Neue', Arial, sans-serif;
-    font-size: 14px;
-    padding: 14px 16px;
-    border-radius: 4px;
-    background: var(--panel);
+  .compare-block {
+    border-radius: 8px;
+    padding: 18px 20px;
+  }
+  .compare-block .cb-label {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    font-weight: 700;
+  }
+  .compare-block .cb-main {
+    font-size: 28px;
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 4px;
+  }
+  .compare-block .cb-sub {
+    font-size: 13px;
+    font-weight: 300;
+  }
+
+  .compare-block.nominal {
+    background: var(--panel2);
     border: 1px solid var(--line);
-    margin-bottom: 12px;
   }
-  .luecke .amount{
-    font-size: 20px;
-    font-variant-numeric: tabular-nums;
-    margin-top: 4px;
+  .compare-block.nominal .cb-label { color: var(--muted); }
+  .compare-block.nominal .cb-main { color: var(--accent); }
+  .compare-block.nominal .cb-sub { color: var(--muted); }
+
+  .compare-block.real {
+    background: var(--warn-bg);
+    border: 1px solid var(--warn-border);
   }
-  .luecke .amount.negative{ color: var(--accent2); }
-  .luecke .amount.positive{ color: var(--warn); }
+  .compare-block.real .cb-label { color: var(--warn); }
+  .compare-block.real .cb-main { color: var(--warn); }
+  .compare-block.real .cb-sub { color: #a0404040; color: rgba(192,57,43,0.6); }
+
+  /* Lücke Block — einzeln, groß */
+  .luecke-block {
+    background: var(--warn-bg);
+    border: 2px solid var(--warn-border);
+    border-radius: 8px;
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+  .luecke-block .cb-label {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--warn);
+    margin-bottom: 8px;
+    font-weight: 700;
+  }
+  .luecke-block .luecke-monat {
+    font-size: 36px;
+    font-weight: 900;
+    color: var(--warn);
+    line-height: 1;
+    margin-bottom: 10px;
+  }
+  .luecke-block .luecke-jahr {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--warn-light);
+    border-top: 1px solid var(--warn-border);
+    padding-top: 10px;
+  }
+  .luecke-block .luecke-jahr-label {
+    font-size: 12px;
+    color: rgba(192,57,43,0.6);
+    font-weight: 400;
+    margin-bottom: 2px;
+  }
+
+  /* Inflation field */
+  .inflation-field {
+    margin: 4px 0 16px;
+  }
 
   .footnote{
-    font-family: 'Helvetica Neue', Arial, sans-serif;
     font-size: 12px;
     color: var(--muted);
     line-height: 1.6;
-    margin-top: 28px;
+    margin-top: 8px;
+    font-weight: 300;
   }
 
+  /* Kontakt */
   .kontakt-form{
-    margin-top: 32px;
-    border-top: 1px solid var(--line);
-    padding-top: 28px;
     display: none;
   }
   .kontakt-form.visible{ display: block; }
   .kontakt-form h2{
     font-size: 22px;
-    font-weight: 400;
+    font-weight: 900;
     margin: 0 0 10px;
+    color: var(--accent);
   }
-  .kontakt-form .sub{ margin-bottom: 20px; }
+  .kontakt-form .sub{
+    color: var(--muted);
+    margin-bottom: 20px;
+  }
   textarea{ min-height: 90px; resize: vertical; }
 
   .hbg-info {
-    font-family: 'Helvetica Neue', Arial, sans-serif;
     font-size: 12px;
     color: var(--accent);
     margin-top: 4px;
+    font-weight: 400;
+  }
+
+  .email-opt {
+    background: #eef4fb;
+    border: 1px solid #c0d4ea;
+    border-radius: 6px;
+    padding: 16px;
+  }
+  .email-opt label {
+    font-size: 14px;
+    color: var(--text);
+    margin-bottom: 8px;
+    display: block;
+    text-transform: none;
+    font-weight: 700;
   }
 </style>
 </head>
@@ -249,78 +331,83 @@
     </div>
   </header>
 
-  <div class="grid">
-    <div class="field">
-      <label for="geburtsdatum">Ihr Geburtsdatum</label>
-      <input type="date" id="geburtsdatum">
-    </div>
-
-    <div class="field">
-      <label for="einkommen">Aktuelles Bruttoeinkommen (monatlich, 14x jährlich)</label>
-      <input type="number" id="einkommen" placeholder="z. B. 3200" min="0" step="10">
-      <div class="hbg-info" id="hbgHinweis"></div>
-    </div>
-
-    <div class="field">
-      <label for="berufsjahre">Wie viele Jahre sind Sie bereits berufstätig?</label>
-      <input type="number" id="berufsjahre" placeholder="z. B. 15" min="0" step="1">
-    </div>
-
-    <div class="row2">
+  <div class="card">
+    <div class="grid">
       <div class="field">
-        <label for="teilzeitJahre">Davon Jahre in Teilzeit</label>
-        <input type="number" id="teilzeitJahre" placeholder="z. B. 2" min="0" step="1" value="0">
+        <label for="geburtsdatum">Ihr Geburtsdatum</label>
+        <input type="date" id="geburtsdatum">
       </div>
+
       <div class="field">
-        <label for="ohneJahre">Davon Jahre ohne Beschäftigung</label>
-        <input type="number" id="ohneJahre" placeholder="z. B. 0" min="0" step="1" value="0">
+        <label for="einkommen">Aktuelles Bruttoeinkommen (monatlich, 14x jährlich)</label>
+        <input type="number" id="einkommen" placeholder="z. B. 3200" min="0" step="10">
+        <div class="hbg-info" id="hbgHinweis"></div>
+      </div>
+
+      <div class="field">
+        <label for="berufsjahre">Wie viele Jahre sind Sie bereits berufstätig?</label>
+        <input type="number" id="berufsjahre" placeholder="z. B. 15" min="0" step="1">
+      </div>
+
+      <div class="row2">
+        <div class="field">
+          <label for="teilzeitJahre">Davon Jahre in Teilzeit</label>
+          <input type="number" id="teilzeitJahre" placeholder="z. B. 2" min="0" step="1" value="0">
+        </div>
+        <div class="field">
+          <label for="ohneJahre">Davon Jahre ohne Beschäftigung</label>
+          <input type="number" id="ohneJahre" placeholder="z. B. 0" min="0" step="1" value="0">
+        </div>
+      </div>
+
+      <div class="row2">
+        <div class="field">
+          <label for="steigerung">Erwartete jährliche Einkommenssteigerung</label>
+          <select id="steigerung">
+            <option value="0.02">2,0 %</option>
+            <option value="0.025">2,5 %</option>
+            <option value="0.03" selected>3,0 %</option>
+            <option value="0.035">3,5 %</option>
+            <option value="0.04">4,0 %</option>
+            <option value="0.045">4,5 %</option>
+            <option value="0.05">5,0 %</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="aufwertung">Erwartete jährliche Pensionsaufwertung</label>
+          <select id="aufwertung">
+            <option value="0.00">0,0 %</option>
+            <option value="0.005">0,5 %</option>
+            <option value="0.01">1,0 %</option>
+            <option value="0.015">1,5 %</option>
+            <option value="0.02" selected>2,0 %</option>
+            <option value="0.025">2,5 %</option>
+            <option value="0.03">3,0 %</option>
+            <option value="0.035">3,5 %</option>
+            <option value="0.04">4,0 %</option>
+          </select>
+        </div>
       </div>
     </div>
-
-    <div class="row2">
-      <div class="field">
-        <label for="steigerung">Erwartete jährliche Einkommenssteigerung</label>
-        <select id="steigerung">
-          <option value="0.02">2,0 %</option>
-          <option value="0.025">2,5 %</option>
-          <option value="0.03" selected>3,0 %</option>
-          <option value="0.035">3,5 %</option>
-          <option value="0.04">4,0 %</option>
-          <option value="0.045">4,5 %</option>
-          <option value="0.05">5,0 %</option>
-        </select>
-      </div>
-      <div class="field">
-        <label for="aufwertung">Erwartete jährliche Pensionsaufwertung</label>
-        <select id="aufwertung">
-          <option value="0.00">0,0 %</option>
-          <option value="0.005">0,5 %</option>
-          <option value="0.01">1,0 %</option>
-          <option value="0.015">1,5 %</option>
-          <option value="0.02" selected>2,0 %</option>
-          <option value="0.025">2,5 %</option>
-          <option value="0.03">3,0 %</option>
-          <option value="0.035">3,5 %</option>
-          <option value="0.04">4,0 %</option>
-        </select>
-      </div>
-    </div>
-
+    <button class="primary" id="berechnen">Pension berechnen</button>
   </div>
-
-  <button id="berechnen">Pension berechnen</button>
 
   <div class="result" id="result">
 
-    <table class="detail-table" id="detailTable"></table>
-
-    <div class="block nominal">
-      <div class="label">Ihre Netto-Alterspension bei Pensionsantritt (65)</div>
-      <div class="value netto" id="pensionNettoNominal">–</div>
-      <div class="value brutto" id="pensionBruttoNominal">– brutto</div>
+    <div class="card">
+      <div class="section-title">Berechnungsdetails</div>
+      <table class="detail-table" id="detailTable"></table>
     </div>
 
-    <div class="field">
+    <!-- Letztes Gehalt -->
+    <div class="gehalt-block">
+      <div class="block-label">Letztes Nettogehalt vor Pensionsantritt (hochgerechnet)</div>
+      <div class="value-main" id="gehaltNetto">–<span> / Monat</span></div>
+      <div class="value-sub" id="gehaltNettoJahr">–</div>
+    </div>
+
+    <!-- Inflation -->
+    <div class="card inflation-field field">
       <label for="inflation">Erwartete jährliche Inflation bis zum Pensionsantritt</label>
       <select id="inflation">
         <option value="0.02">2,0 %</option>
@@ -333,69 +420,93 @@
       </select>
     </div>
 
-    <div class="block real">
-      <div class="label">Ihre Netto-Alterspension – nach Abzug der Inflation (heutige Kaufkraft)</div>
-      <div class="value" id="pensionRealNetto">–</div>
-      <div class="insight" id="insightText"></div>
+    <!-- Pension nominal vs real -->
+    <div class="card">
+      <div class="section-title">Ihre voraussichtliche Alterspension</div>
+      <div class="compare-grid">
+        <div class="compare-block nominal">
+          <div class="cb-label">Netto-Pension</div>
+          <div class="cb-main" id="pensionNominalMonat">–</div>
+          <div class="cb-sub" id="pensionNominalJahr">–</div>
+        </div>
+        <div class="compare-block real">
+          <div class="cb-label">Nach Inflation (heutige Kaufkraft)</div>
+          <div class="cb-main" id="pensionRealMonat">–</div>
+          <div class="cb-sub" id="pensionRealJahr">–</div>
+        </div>
+      </div>
     </div>
 
-    <button id="weiterBtn" style="display:none;">Weiter</button>
+    <!-- Lücke — einzelner großer Block -->
+    <div class="luecke-block">
+      <div class="cb-label">Fehlender Betrag gegenüber letztem Gehalt (nominal)</div>
+      <div class="luecke-monat" id="lueckeNominalMonat">–</div>
+      <div class="luecke-jahr-label">Fehlender Betrag pro Jahr (14x)</div>
+      <div class="luecke-jahr" id="lueckeNominalJahr">–</div>
+    </div>
+
+    <button class="primary" id="weiterBtn" style="display:none;">Jetzt Beratung anfragen</button>
 
     <div class="footnote">
-      Diese Berechnung berücksichtigt die gesetzliche Höchstbeitragsgrundlage (HBG):
-      Für vergangene Jahre werden die tatsächlichen HBG-Werte laut ASVG verwendet.
-      Für zukünftige Jahre wird die HBG mit der historischen Durchschnittssteigerung
-      von 3,2 % p.a. hochgerechnet. Liegt Ihr Einkommen über der HBG, wird nur die
-      HBG für die Pensionsgutschrift herangezogen.<br><br>
-      Die Netto-Berechnung basiert auf dem österreichischen Einkommensteuertarif 2024,
-      einem Krankenversicherungsbeitrag für Pensionisten von 5,1 % und einer
-      vereinfachten Berücksichtigung des Pensionistenabsetzbetrags. Pensionsantrittsalter: 65 Jahre.
-      Alle Werte sind unverbindliche Schätzungen.
+      Diese Berechnung ist eine unverbindliche Annäherung auf Basis Ihrer Angaben.
+      Da Ihr tatsächliches Pensionskonto nicht abgerufen werden kann, wird Ihr bisheriges
+      Einkommen rückwärts hochgerechnet. Die Berechnung berücksichtigt die gesetzliche
+      Höchstbeitragsgrundlage mit echten historischen Werten (2004–2026) und +3,2 % p.a.
+      Hochrechnung für die Zukunft. Pensionsantrittsalter: 65 Jahre. Alle Angaben ohne Gewähr.
     </div>
   </div>
 
   <div class="kontakt-form" id="kontaktForm">
-    <h2>Holen Sie sich Klarheit</h2>
-    <div class="sub">
-      Diese Berechnung basiert auf Annahmen. Mit Ihrem echten Pensionskonto kann Ihr
-      Berater eine genaue Berechnung erstellen und Ihnen zeigen, mit welchen Schritten
-      Sie die berechnete Lücke schließen – und Ihre Wunschpension erreichen können.
-    </div>
+    <div class="card">
+      <h2>Holen Sie sich Klarheit</h2>
+      <div class="sub">
+        Diese Berechnung basiert auf Annahmen. Mit Ihrem echten Pensionskonto kann Ihr
+        Berater eine genaue Berechnung erstellen und Ihnen zeigen, mit welchen Schritten
+        Sie die berechnete Lücke schließen können.
+      </div>
 
-    <div class="grid">
-      <div class="field">
-        <label for="kName">Ihr Name</label>
-        <input type="text" id="kName" placeholder="Vor- und Nachname">
-      </div>
-      <div class="field">
-        <label for="kTelefon">Ihre Telefonnummer</label>
-        <input type="tel" id="kTelefon" placeholder="z. B. 0664 123 456">
-      </div>
-      <div class="field">
-        <label for="kBerater">Name Ihres Beraters / Ihrer Beraterin (falls bekannt)</label>
-        <input type="text" id="kBerater" placeholder="optional">
-      </div>
-      <div class="field">
-        <label for="kNachricht">Ihre Nachricht</label>
-        <textarea id="kNachricht">Bitte um eine genaue Berechnung meiner Pension auf Basis meines echten Pensionskontos und um Aufklärung, mit welchen Möglichkeiten ich meine Wunschpension erreichen kann. Bitte vereinbaren Sie einen Termin mit mir.</textarea>
-      </div>
-    </div>
+      <div class="grid">
+        <div class="field">
+          <label for="kName">Ihr Name</label>
+          <input type="text" id="kName" placeholder="Vor- und Nachname">
+        </div>
+        <div class="field">
+          <label for="kTelefon">Ihre Telefonnummer</label>
+          <input type="tel" id="kTelefon" placeholder="z. B. 0664 123 456">
+        </div>
+        <div class="field">
+          <label for="kBerater">Name Ihres Beraters / Ihrer Beraterin (falls bekannt)</label>
+          <input type="text" id="kBerater" placeholder="optional">
+        </div>
 
-    <button id="sendenBtn">Absenden</button>
-    <div class="footnote">
-      Ihre Anfrage inklusive Berechnung wird direkt an unser Büro gesendet.
-      Wir leiten sie an den passenden Berater weiter, der sich telefonisch bei
-      Ihnen meldet.
+        <div class="email-opt field">
+          <label for="kEmail">📧 Möchten Sie Ihr Ergebnis per E-Mail erhalten?<br>
+            <span style="font-size:12px; color:var(--muted); font-weight:400;">Tragen Sie hier Ihre E-Mail-Adresse ein (optional)</span>
+          </label>
+          <input type="email" id="kEmail" placeholder="ihre@email.at">
+        </div>
+
+        <div class="field">
+          <label for="kNachricht">Ihre Nachricht</label>
+          <textarea id="kNachricht">Bitte um eine genaue Berechnung meiner Pension auf Basis meines echten Pensionskontos und um Aufklärung, mit welchen Möglichkeiten ich meine Wunschpension erreichen kann. Bitte vereinbaren Sie einen Termin mit mir.</textarea>
+        </div>
+      </div>
+
+      <button class="primary" id="sendenBtn">Absenden</button>
+      <div class="footnote">
+        Ihre Anfrage inklusive Berechnung wird direkt an Ihren Berater gesendet,
+        der sich telefonisch bei Ihnen meldet.
+      </div>
     </div>
   </div>
 </div>
 
 <script>
 const fmt = (n) => n.toLocaleString('de-AT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+const fmtK = (n) => n.toLocaleString('de-AT', {minimumFractionDigits: 0, maximumFractionDigits: 0});
 
 let lastResult = null;
 
-// Historische Höchstbeitragsgrundlagen (monatlich, ASVG)
 const HBG_HISTORISCH = {
   2004: 3450, 2005: 3630, 2006: 3750, 2007: 3840, 2008: 3930,
   2009: 4020, 2010: 4110, 2011: 4200, 2012: 4230, 2013: 4440,
@@ -403,94 +514,96 @@ const HBG_HISTORISCH = {
   2019: 5220, 2020: 5370, 2021: 5550, 2022: 5670, 2023: 5850,
   2024: 6060, 2025: 6450, 2026: 6930
 };
-
-const HBG_STEIGERUNG = 0.032; // historischer Durchschnitt
+const HBG_STEIGERUNG = 0.032;
 const HBG_LETZTES_BEKANNTES_JAHR = 2026;
 const HBG_LETZTER_BEKANNTER_WERT = 6930;
 
 function getHBG(jahr) {
   if (HBG_HISTORISCH[jahr]) return HBG_HISTORISCH[jahr];
-  if (jahr > HBG_LETZTES_BEKANNTES_JAHR) {
-    const jahre = jahr - HBG_LETZTES_BEKANNTES_JAHR;
-    return HBG_LETZTER_BEKANNTER_WERT * Math.pow(1 + HBG_STEIGERUNG, jahre);
-  }
-  // Vor 2004: rückwärts hochrechnen
-  const jahre = 2004 - jahr;
-  return 3450 / Math.pow(1 + HBG_STEIGERUNG, jahre);
+  if (jahr > HBG_LETZTES_BEKANNTES_JAHR)
+    return HBG_LETZTER_BEKANNTER_WERT * Math.pow(1 + HBG_STEIGERUNG, jahr - HBG_LETZTES_BEKANNTES_JAHR);
+  return 3450 / Math.pow(1 + HBG_STEIGERUNG, 2004 - jahr);
 }
 
-// Aktuellen HBG-Hinweis anzeigen
 document.getElementById('einkommen').addEventListener('input', function() {
   const val = parseFloat(this.value);
   const hbgAktuell = getHBG(new Date().getFullYear());
   const hinweis = document.getElementById('hbgHinweis');
   if (!isNaN(val) && val > 0) {
-    if (val > hbgAktuell) {
-      hinweis.textContent = `Achtung: Ihr Einkommen übersteigt die Höchstbeitragsgrundlage 2026 von € ${Math.round(hbgAktuell).toLocaleString('de-AT')}. Für die Pension wird nur die HBG angerechnet.`;
-    } else {
-      hinweis.textContent = `Höchstbeitragsgrundlage 2026: € ${Math.round(hbgAktuell).toLocaleString('de-AT')} – Ihr Einkommen liegt darunter.`;
-    }
-  } else {
-    hinweis.textContent = '';
-  }
+    if (val > hbgAktuell)
+      hinweis.textContent = `Achtung: Ihr Einkommen übersteigt die Höchstbeitragsgrundlage 2026 von € ${fmtK(hbgAktuell)}. Für die Pension wird nur die HBG angerechnet.`;
+    else
+      hinweis.textContent = `Höchstbeitragsgrundlage 2026: € ${fmtK(hbgAktuell)} – Ihr Einkommen liegt darunter.`;
+  } else hinweis.textContent = '';
 });
 
-function bruttoZuNettoJahr(jahresbrutto) {
-  const svSatz = 0.051;
-  const svBemessung = jahresbrutto * svSatz;
-  const steuerbemessung = jahresbrutto - svBemessung;
-
+// Korrigierte Brutto-Netto-Berechnung mit begünstigter Besteuerung der Sonderzahlungen (13./14. Bezug)
+function bruttoZuNettoMonat(monatsBrutto) {
   const stufen = [
-    { bis: 12816,    satz: 0.00 },
-    { bis: 20818,    satz: 0.20 },
-    { bis: 34513,    satz: 0.30 },
-    { bis: 66612,    satz: 0.40 },
-    { bis: 99266,    satz: 0.48 },
-    { bis: 1000000,  satz: 0.50 },
+    { bis: 12816, satz: 0.00 }, { bis: 20818, satz: 0.20 },
+    { bis: 34513, satz: 0.30 }, { bis: 66612, satz: 0.40 },
+    { bis: 99266, satz: 0.48 }, { bis: 1000000, satz: 0.50 },
     { bis: Infinity, satz: 0.55 }
   ];
 
-  let steuer = 0;
-  let vorherigeGrenze = 0;
-  for (const stufe of stufen) {
-    if (steuerbemessung > vorherigeGrenze) {
-      const anteil = Math.min(steuerbemessung, stufe.bis) - vorherigeGrenze;
-      steuer += anteil * stufe.satz;
-      vorherigeGrenze = stufe.bis;
-    } else {
-      break;
+  function berechneSteuer(bemessung) {
+    let steuer = 0, grenze = 0;
+    for (const s of stufen) {
+      if (bemessung > grenze) {
+        steuer += (Math.min(bemessung, s.bis) - grenze) * s.satz;
+        grenze = s.bis;
+      } else break;
     }
+    return steuer;
   }
 
+  function grenzSatz(bemessung) {
+    for (const s of stufen) { if (bemessung <= s.bis) return s.satz; }
+    return 0.55;
+  }
+
+  // SV: 5,1% KV für Pensionisten
+  const sv = monatsBrutto * 0.051;
+  const monatNachSV = monatsBrutto - sv;
+
+  // Lohnsteuer auf laufenden Bezug (12 Monate)
+  const jahresBemessung = monatNachSV * 12;
   const PAB_MAX = 1405;
   let pab = 0;
-  if (steuerbemessung <= 20500) {
-    pab = PAB_MAX;
-  } else if (steuerbemessung < 30000) {
-    pab = PAB_MAX * (1 - (steuerbemessung - 20500) / (30000 - 20500));
-  }
-  steuer = Math.max(0, steuer - pab);
+  if (jahresBemessung <= 20500) pab = PAB_MAX;
+  else if (jahresBemessung < 30000) pab = PAB_MAX * (1 - (jahresBemessung - 20500) / 9500);
+  const steuerJahrLaufend = Math.max(0, berechneSteuer(jahresBemessung) - pab);
+  const steuerMonat = steuerJahrLaufend / 12;
+  const nettoMonat = monatNachSV - steuerMonat;
 
-  return jahresbrutto - svBemessung - steuer;
-}
+  // Begünstigte Besteuerung Sonderzahlungen (13. + 14. Bezug)
+  // Freibetrag €620, darüber: max(6%, Grenzsteuersatz/2)
+  const sonderSatz = Math.max(0.06, grenzSatz(jahresBemessung) / 2);
+  const sonderNachSV = monatsBrutto - (monatsBrutto * 0.051);
+  const sonderSteuer = Math.max(0, sonderNachSV - 620) * sonderSatz;
+  const nettoSonder = sonderNachSV - sonderSteuer;
 
-function bruttoZuNettoMonat(monatsbetrag) {
-  return bruttoZuNettoJahr(monatsbetrag * 14) / 14;
+  // Jahresnetto ÷ 14 = monatlicher Pensionsbetrag
+  return (nettoMonat * 12 + nettoSonder * 2) / 14;
 }
 
 function berechneInflationsabhaengig() {
   if (!lastResult) return;
   const inflation = parseFloat(document.getElementById('inflation').value);
-  const { pensionNettoNominal, jahreBisPension } = lastResult;
+  const { pensionNettoNominal, jahreBisPension, letztesGehaltNettoNominal } = lastResult;
   const abwertung = Math.pow(1 + inflation, jahreBisPension);
   const pensionRealNetto = pensionNettoNominal / abwertung;
+  const lueckeNominal = Math.max(0, letztesGehaltNettoNominal - pensionNettoNominal);
 
-  document.getElementById('pensionRealNetto').innerHTML =
-    '€ ' + fmt(pensionRealNetto) + ' <span>/ Monat</span>';
-  document.getElementById('insightText').innerHTML =
-    `Ohne private Vorsorge entsteht hier eine deutliche Lücke zu Ihrem gewohnten Lebensstandard.`;
+  document.getElementById('pensionRealMonat').textContent = '€ ' + fmt(pensionRealNetto) + ' / Monat';
+  document.getElementById('pensionRealJahr').textContent = '€ ' + fmt(pensionRealNetto * 14) + ' / Jahr (14x)';
+  document.getElementById('lueckeNominalMonat').textContent = '€ ' + fmt(lueckeNominal) + ' / Monat';
+  document.getElementById('lueckeNominalJahr').textContent = '€ ' + fmt(lueckeNominal * 14);
 
   lastResult.pensionRealNetto = pensionRealNetto;
+  lastResult.lueckeNominal = lueckeNominal;
+  lastResult.inflation = inflation;
+
   document.getElementById('weiterBtn').style.display = 'block';
 }
 
@@ -508,7 +621,7 @@ document.getElementById('berechnen').addEventListener('click', () => {
     return;
   }
   if (teilzeitJahre + ohneJahre > berufsjahre) {
-    alert('Teilzeit- und beschäftigungslose Jahre dürfen in Summe nicht mehr sein als die gesamten Berufsjahre.');
+    alert('Teilzeit- und beschäftigungslose Jahre dürfen nicht mehr als die gesamten Berufsjahre sein.');
     return;
   }
 
@@ -519,81 +632,63 @@ document.getElementById('berechnen').addEventListener('click', () => {
   const monatDiff = heute.getMonth() - geburtsdatum.getMonth();
   if (monatDiff < 0 || (monatDiff === 0 && heute.getDate() < geburtsdatum.getDate())) alter--;
 
-  const pensionsalter = 65;
-  let jahreBisPension = Math.max(0, pensionsalter - alter);
-
+  let jahreBisPension = Math.max(0, 65 - alter);
   const vollzeitJahre = berufsjahre - teilzeitJahre - ohneJahre;
   const avgGewichtung = berufsjahre > 0
-    ? (vollzeitJahre * 1 + teilzeitJahre * 0.5 + ohneJahre * 0) / berufsjahre
-    : 1;
+    ? (vollzeitJahre * 1 + teilzeitJahre * 0.5 + ohneJahre * 0) / berufsjahre : 1;
 
   const GUTSCHRIFTSATZ = 0.0178;
   const jahresEinkommenAktuell = einkommen * 14;
+  let kontostand = 0, hbgGedeckeltJahre = 0;
 
-  let kontostand = 0;
-  let hbgGedeckeltJahre = 0;
-
-  // Vergangene Jahre (rückwärts vom aktuellen Jahr)
   for (let k = 1; k <= berufsjahre; k++) {
-    const jahr = aktuellesJahr - k;
-    const hbg = getHBG(jahr);
-    const hbgJahrlich = hbg * 14;
-
-    // Einkommen in diesem Jahr (rückwärts hochgerechnet)
-    const einkommenJahrK = jahresEinkommenAktuell / Math.pow(1 + steigerung, k);
-    const beitragsgrundlage = Math.min(einkommenJahrK, hbgJahrlich);
-    if (einkommenJahrK > hbgJahrlich) hbgGedeckeltJahre++;
-
-    const gutschrift = beitragsgrundlage * GUTSCHRIFTSATZ * avgGewichtung;
-    const aufwertungsjahre = jahreBisPension + k;
-    kontostand += gutschrift * Math.pow(1 + aufwertung, aufwertungsjahre);
+    const hbgJ = getHBG(aktuellesJahr - k) * 14;
+    const einkJ = jahresEinkommenAktuell / Math.pow(1 + steigerung, k);
+    const bg = Math.min(einkJ, hbgJ);
+    if (einkJ > hbgJ) hbgGedeckeltJahre++;
+    kontostand += bg * GUTSCHRIFTSATZ * avgGewichtung * Math.pow(1 + aufwertung, jahreBisPension + k);
   }
-
-  // Zukünftige Jahre (vorwärts vom aktuellen Jahr)
   for (let j = 0; j < jahreBisPension; j++) {
-    const jahr = aktuellesJahr + j;
-    const hbg = getHBG(jahr);
-    const hbgJahrlich = hbg * 14;
-
-    const einkommenJahrJ = jahresEinkommenAktuell * Math.pow(1 + steigerung, j);
-    const beitragsgrundlage = Math.min(einkommenJahrJ, hbgJahrlich);
-    if (einkommenJahrJ > hbgJahrlich) hbgGedeckeltJahre++;
-
-    const gutschrift = beitragsgrundlage * GUTSCHRIFTSATZ;
-    const aufwertungsjahre = jahreBisPension - j;
-    kontostand += gutschrift * Math.pow(1 + aufwertung, aufwertungsjahre);
+    const hbgJ = getHBG(aktuellesJahr + j) * 14;
+    const einkJ = jahresEinkommenAktuell * Math.pow(1 + steigerung, j);
+    const bg = Math.min(einkJ, hbgJ);
+    if (einkJ > hbgJ) hbgGedeckeltJahre++;
+    kontostand += bg * GUTSCHRIFTSATZ * Math.pow(1 + aufwertung, jahreBisPension - j);
   }
 
   const monatlichePension = kontostand / 14;
-  const letztesJahreseinkommen = jahresEinkommenAktuell * Math.pow(1 + steigerung, Math.max(jahreBisPension - 1, 0));
-  const letztesMonatsgehalt = letztesJahreseinkommen / 14;
+  const letztesMonatsgehalt = jahresEinkommenAktuell * Math.pow(1 + steigerung, Math.max(jahreBisPension - 1, 0)) / 14;
   const hbgBeiPension = getHBG(aktuellesJahr + jahreBisPension);
 
   const pensionNettoNominal = bruttoZuNettoMonat(monatlichePension);
   const letztesGehaltNettoNominal = bruttoZuNettoMonat(letztesMonatsgehalt);
 
-  lastResult = { pensionNettoNominal, jahreBisPension, letztesGehaltNettoNominal, alter, berufsjahre, avgGewichtung, kontostand };
+  lastResult = {
+    pensionNettoNominal, pensionBruttoNominal: monatlichePension,
+    jahreBisPension, letztesGehaltNettoNominal, alter, berufsjahre,
+    avgGewichtung, kontostand, aktuellesJahr, hbgBeiPension, hbgGedeckeltJahre,
+    steigerung, aufwertung
+  };
 
-  const hbgHinweisText = hbgGedeckeltJahre > 0
-    ? `In ${hbgGedeckeltJahre} von ${berufsjahre + jahreBisPension} Jahren greift die HBG-Deckelung.`
-    : `Die HBG-Deckelung greift in keinem Jahr.`;
+  const hbgText = hbgGedeckeltJahre > 0
+    ? `In ${hbgGedeckeltJahre} von ${berufsjahre + jahreBisPension} Jahren greift die HBG-Deckelung`
+    : `Die HBG-Deckelung greift in keinem Jahr`;
 
-  const detailTable = document.getElementById('detailTable');
-  detailTable.innerHTML = `
+  document.getElementById('detailTable').innerHTML = `
     <tr><td>Aktuelles Alter</td><td>${alter} Jahre</td></tr>
     <tr><td>Jahre bis Pensionsantritt (65)</td><td>${jahreBisPension} Jahre</td></tr>
-    <tr><td>Bisherige Berufsjahre</td><td>${berufsjahre} Jahre (Ø Gewichtung ${(avgGewichtung*100).toFixed(0)} %)</td></tr>
-    <tr><td>Höchstbeitragsgrundlage aktuell (${aktuellesJahr})</td><td>€ ${Math.round(getHBG(aktuellesJahr)).toLocaleString('de-AT')} / Monat</td></tr>
-    <tr><td>Höchstbeitragsgrundlage bei Pensionsantritt (${aktuellesJahr + jahreBisPension})</td><td>€ ${Math.round(hbgBeiPension).toLocaleString('de-AT')} / Monat (Hochrechnung)</td></tr>
-    <tr><td>HBG-Deckelung</td><td>${hbgHinweisText}</td></tr>
-    <tr><td>Geschätzter Kontostand bei Pensionsantritt</td><td>€ ${fmt(kontostand)}</td></tr>
-    <tr><td>Letztes Nettogehalt vor Pensionsantritt (hochgerechnet)</td><td>€ ${fmt(letztesGehaltNettoNominal)} / Monat</td></tr>
+    <tr><td>Bisherige Berufsjahre</td><td>${berufsjahre} Jahre (Ø ${(avgGewichtung*100).toFixed(0)} %)</td></tr>
+    <tr><td>HBG aktuell (${aktuellesJahr})</td><td>€ ${fmtK(getHBG(aktuellesJahr))} / Monat</td></tr>
+    <tr><td>HBG bei Pensionsantritt (${aktuellesJahr + jahreBisPension})</td><td>€ ${fmtK(hbgBeiPension)} / Monat</td></tr>
+    <tr><td>HBG-Deckelung</td><td>${hbgText}</td></tr>
+    <tr><td>Guthaben Pensionskonto bei Pensionsantritt</td><td>€ ${fmt(kontostand)}</td></tr>
+    <tr><td>Bruttopension monatlich</td><td>€ ${fmt(kontostand / 14)}</td></tr>
   `;
 
-  document.getElementById('pensionNettoNominal').innerHTML =
-    '€ ' + fmt(pensionNettoNominal) + ' <span>/ Monat</span>';
-  document.getElementById('pensionBruttoNominal').innerHTML =
-    '€ ' + fmt(monatlichePension) + ' / Monat brutto';
+  document.getElementById('gehaltNetto').innerHTML = '€ ' + fmt(letztesGehaltNettoNominal) + '<span> / Monat</span>';
+  document.getElementById('gehaltNettoJahr').textContent = '€ ' + fmt(letztesGehaltNettoNominal * 14) + ' / Jahr (14x)';
+  document.getElementById('pensionNominalMonat').textContent = '€ ' + fmt(pensionNettoNominal) + ' / Monat';
+  document.getElementById('pensionNominalJahr').textContent = '€ ' + fmt(pensionNettoNominal * 14) + ' / Jahr (14x)';
 
   berechneInflationsabhaengig();
 
@@ -613,12 +708,10 @@ document.getElementById('sendenBtn').addEventListener('click', async () => {
   const name = document.getElementById('kName').value.trim();
   const telefon = document.getElementById('kTelefon').value.trim();
   const berater = document.getElementById('kBerater').value.trim();
+  const email = document.getElementById('kEmail').value.trim();
   const nachricht = document.getElementById('kNachricht').value.trim();
 
-  if (!name || !telefon) {
-    alert('Bitte Name und Telefonnummer angeben.');
-    return;
-  }
+  if (!name || !telefon) { alert('Bitte Name und Telefonnummer angeben.'); return; }
 
   const r = lastResult;
   const sendenBtn = document.getElementById('sendenBtn');
@@ -635,22 +728,43 @@ document.getElementById('sendenBtn').addEventListener('click', async () => {
       },
       body: JSON.stringify({
         name, telefon, berater, nachricht,
+        kundenEmail: email || null,
         ergebnis: {
           letztesGehaltNetto: fmt(r.letztesGehaltNettoNominal),
+          letztesGehaltNettoJahr: fmt(r.letztesGehaltNettoNominal * 14),
           pensionNettoNominal: fmt(r.pensionNettoNominal),
+          pensionNettoNominalJahr: fmt(r.pensionNettoNominal * 14),
           pensionRealNetto: fmt(r.pensionRealNetto),
-          jahreBisPension: r.jahreBisPension
+          pensionRealNettoJahr: fmt(r.pensionRealNetto * 14),
+          lueckeNominal: fmt(r.lueckeNominal),
+          lueckeNominalJahr: fmt(r.lueckeNominal * 14),
+          jahreBisPension: r.jahreBisPension,
+          inflation: Math.round(r.inflation * 100) + ' %'
         }
       })
     });
 
-    if (!res.ok) {
-      const errBody = await res.text();
-      throw new Error(errBody);
-    }
+    if (!res.ok) throw new Error(await res.text());
 
     sendenBtn.textContent = 'Gesendet ✓';
-    sendenBtn.style.background = 'var(--accent2)';
+    sendenBtn.style.background = '#27ae60';
+
+    const danke = document.createElement('div');
+    danke.style.cssText = 'margin-top:20px; padding:20px; background:#f0f8f0; border:1px solid #a8d5a8; border-radius:8px; font-size:14px; line-height:1.8;';
+    danke.innerHTML = `
+      <div style="font-size:16px; font-weight:700; margin-bottom:12px; color:#27ae60;">✓ Ihre Anfrage wurde gesendet!</div>
+      Ihr Berater meldet sich in Kürze bei Ihnen:<br><br>
+      <strong>Ing. Gottfried Scherz, akad FDL, EFA®</strong><br>
+      📞 <a href="tel:+43676884002990" style="color:#355f8f; text-decoration:none; font-weight:700;">0676 / 884002990</a><br>
+      ✉️ <a href="mailto:gottfried.scherz@dvag.at" style="color:#355f8f; text-decoration:none;">gottfried.scherz@dvag.at</a><br>
+      🌐 <a href="https://www.dvag.at/gottfried.scherz" target="_blank" style="color:#355f8f; text-decoration:none;">www.dvag.at/gottfried.scherz</a><br><br>
+      <a href="https://wa.me/43676884002990" target="_blank"
+        style="display:inline-block; background:#25D366; color:#fff; padding:10px 20px; border-radius:4px; text-decoration:none; font-weight:700; font-size:14px;">
+        💬 WhatsApp schreiben
+      </a>
+    `;
+    document.getElementById('kontaktForm').querySelector('.card').appendChild(danke);
+
   } catch (err) {
     sendenBtn.disabled = false;
     sendenBtn.textContent = 'Absenden';
