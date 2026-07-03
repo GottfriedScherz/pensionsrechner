@@ -270,6 +270,174 @@
     margin: 4px 0 16px;
   }
 
+  /* Zwei-Spalten-Layout */
+  .two-col-result {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+  @media (max-width: 600px) {
+    .two-col-result { grid-template-columns: 1fr; }
+  }
+  .col-left, .col-right {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .col-left .res-block,
+  .col-right .res-block {
+    flex: 1;
+  }
+
+  /* Spalten-Header */
+  .col-header {
+    border-radius: 8px 8px 0 0;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 0;
+  }
+  .col-header-icon { font-size: 24px; line-height: 1; }
+  .col-header-title {
+    font-size: 15px;
+    font-weight: 900;
+    color: #fff;
+    letter-spacing: 0.01em;
+  }
+  .col-header-sub {
+    font-size: 11px;
+    color: rgba(255,255,255,0.7);
+    font-weight: 400;
+    margin-top: 2px;
+  }
+  .col-header-bu { background: #c0392b; border-radius: 8px; }
+  .col-header-pension { background: #355f8f; border-radius: 8px; }
+
+  /* Ergebnis-Blöcke */
+  .res-block {
+    border-radius: 8px;
+    padding: 14px 16px;
+  }
+  .res-stufe {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    opacity: 0.6;
+  }
+  .res-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .res-main {
+    font-size: 20px;
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 3px;
+  }
+  .res-sub {
+    font-size: 12px;
+    font-weight: 300;
+    opacity: 0.7;
+  }
+  .res-sub-label {
+    font-size: 11px;
+    font-weight: 400;
+    opacity: 0.6;
+    margin-top: 8px;
+    border-top: 1px solid rgba(0,0,0,0.1);
+    padding-top: 8px;
+    margin-bottom: 2px;
+  }
+  .res-jahr {
+    font-size: 17px;
+    font-weight: 700;
+  }
+
+  /* BLAU */
+  .res-blau {
+    background: #e8eef5;
+    border: 1px solid #c8d5e3;
+  }
+  .res-blau .res-stufe { color: #355f8f; }
+  .res-blau .res-label { color: #355f8f; }
+  .res-blau .res-main { color: #355f8f; }
+  .res-blau .res-sub { color: #355f8f; }
+
+  /* ORANGE */
+  .res-orange {
+    background: #fef5e7;
+    border: 1px solid #f5cba7;
+  }
+  .res-orange .res-stufe { color: #d35400; }
+  .res-orange .res-label { color: #d35400; }
+  .res-orange .res-main { color: #d35400; }
+  .res-orange .res-sub { color: #d35400; }
+
+  /* ROT */
+  .res-rot {
+    background: #fdf2f2;
+    border: 2px solid #f5c6c6;
+  }
+  .res-rot .res-stufe { color: #c0392b; }
+  .res-rot .res-label { color: #c0392b; }
+  .res-rot .res-main { color: #c0392b; font-size: 22px; }
+  .res-rot .res-sub-label { color: #c0392b; border-top-color: #f5c6c6; }
+  .res-rot .res-jahr { color: #e74c3c; }
+
+  /* Pension nach Inflation — kleine Info */
+  .res-info-block {
+    background: #fdf2f2;
+    border: 1px dashed #f5c6c6;
+    border-radius: 8px;
+    padding: 12px 16px;
+  }
+  .res-info-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #c0392b;
+    margin-bottom: 4px;
+    opacity: 0.8;
+  }
+  .res-info-main {
+    font-size: 16px;
+    font-weight: 700;
+    color: #c0392b;
+  }
+  .res-info-sub {
+    font-size: 11px;
+    color: rgba(192,57,43,0.6);
+    margin-top: 2px;
+  }
+
+  /* BU Hinweis */
+  .bu-hinweis-ok {
+    font-size: 12px;
+    color: #27ae60;
+    background: #f0f8f0;
+    border: 1px solid #a8d5a8;
+    border-radius: 6px;
+    padding: 10px 12px;
+    font-weight: 700;
+  }
+  .bu-hinweis-warn {
+    font-size: 12px;
+    color: var(--warn);
+    background: var(--warn-bg);
+    border: 1px solid var(--warn-border);
+    border-radius: 6px;
+    padding: 10px 12px;
+    font-weight: 700;
+  }
+
   .footnote{
     font-size: 12px;
     color: var(--muted);
@@ -389,6 +557,7 @@
         </div>
       </div>
     </div>
+    <div id="formFehler" style="display:none; background:#fdf2f2; border:1px solid #f5c6c6; border-radius:6px; padding:12px 16px; color:#c0392b; font-size:14px; font-weight:700; margin-top:8px;"></div>
     <button class="primary" id="berechnen">Pension berechnen</button>
   </div>
 
@@ -397,13 +566,6 @@
     <div class="card">
       <div class="section-title">Berechnungsdetails</div>
       <table class="detail-table" id="detailTable"></table>
-    </div>
-
-    <!-- Letztes Gehalt -->
-    <div class="gehalt-block">
-      <div class="block-label">Letztes Nettogehalt vor Pensionsantritt (hochgerechnet)</div>
-      <div class="value-main" id="gehaltNetto">–<span> / Monat</span></div>
-      <div class="value-sub" id="gehaltNettoJahr">–</div>
     </div>
 
     <!-- Inflation -->
@@ -420,39 +582,91 @@
       </select>
     </div>
 
-    <!-- Pension nominal vs real -->
-    <div class="card">
-      <div class="section-title">Ihre voraussichtliche Alterspension</div>
-      <div class="compare-grid">
-        <div class="compare-block nominal">
-          <div class="cb-label">Netto-Pension</div>
-          <div class="cb-main" id="pensionNominalMonat">–</div>
-          <div class="cb-sub" id="pensionNominalJahr">–</div>
+    <!-- Zwei-Spalten-Layout: BU links, Alterspension rechts -->
+    <div class="two-col-result">
+
+      <!-- LINKE SPALTE: BU -->
+      <div class="col-left">
+        <div class="col-header col-header-bu">
+          <div class="col-header-icon">⚠️</div>
+          <div>
+            <div class="col-header-title">Bei Berufsunfähigkeit</div>
+            <div class="col-header-sub">Gesetzlicher Anspruch – heute</div>
+          </div>
         </div>
-        <div class="compare-block real">
-          <div class="cb-label">Nach Inflation (heutige Kaufkraft)</div>
-          <div class="cb-main" id="pensionRealMonat">–</div>
-          <div class="cb-sub" id="pensionRealJahr">–</div>
+
+        <div id="buHinweis" style="display:none;"></div>
+
+        <!-- Stufe 1: Aktuelles Einkommen — BLAU -->
+        <div class="res-block res-blau" id="buEinkommenBlock">
+          <div class="res-label">Aktuelles Nettoeinkommen</div>
+          <div class="res-main" id="buEinkommen">–</div>
+          <div class="res-sub" id="buEinkommenJahr">–</div>
+        </div>
+
+        <!-- Stufe 2: BU-Pension — ORANGE -->
+        <div class="res-block res-orange" id="buPensionBlock">
+          <div class="res-label">Gesetzliche BU-Pension (netto)</div>
+          <div class="res-main" id="buPension">–</div>
+          <div class="res-sub" id="buPensionJahr">–</div>
+        </div>
+
+        <!-- Stufe 3: BU-Lücke — ROT -->
+        <div class="res-block res-rot" id="buLueckeBlock">
+          <div class="res-label">Fehlender Betrag bei BU</div>
+          <div class="res-main" id="buLueckeMonat">–</div>
+          <div class="res-sub-label">Fehlender Betrag pro Jahr (14x)</div>
+          <div class="res-jahr" id="buLueckeJahr">–</div>
         </div>
       </div>
-    </div>
 
-    <!-- Lücke — einzelner großer Block -->
-    <div class="luecke-block">
-      <div class="cb-label">Fehlender Betrag gegenüber letztem Gehalt (nominal)</div>
-      <div class="luecke-monat" id="lueckeNominalMonat">–</div>
-      <div class="luecke-jahr-label">Fehlender Betrag pro Jahr (14x)</div>
-      <div class="luecke-jahr" id="lueckeNominalJahr">–</div>
-    </div>
+      <!-- RECHTE SPALTE: Alterspension -->
+      <div class="col-right">
+        <div class="col-header col-header-pension">
+          <div class="col-header-icon">🏦</div>
+          <div>
+            <div class="col-header-title">Alterspension</div>
+            <div class="col-header-sub">Gesetzlicher Anspruch – bei 65</div>
+          </div>
+        </div>
+
+        <!-- Stufe 1: Letztes Gehalt — BLAU -->
+        <div class="res-block res-blau">
+          <div class="res-label">Netto-Gehalt vor Pension (hochgerechnet)</div>
+          <div class="res-main" id="gehaltNetto">–</div>
+          <div class="res-sub" id="gehaltNettoJahr">–</div>
+        </div>
+
+        <!-- Stufe 2: Pension nominal + real — ORANGE -->
+        <div class="res-block res-orange">
+          <div class="res-label">Gesetzliche Netto-Pension mit 65</div>
+          <div class="res-main" id="pensionNominalMonat">–</div>
+          <div class="res-sub" id="pensionNominalJahr">–</div>
+          <div style="border-top:1px solid #f5cba7; margin-top:10px; padding-top:10px;">
+            <div class="res-label">Nach Inflation (heutige Kaufkraft)</div>
+            <div class="res-main" id="pensionRealMonat">–</div>
+            <div class="res-sub" id="pensionRealJahr">–</div>
+          </div>
+        </div>
+
+        <!-- Stufe 3: Lücke — ROT -->
+        <div class="res-block res-rot">
+          <div class="res-label">Fehlender Betrag ggü. letztem Gehalt</div>
+          <div class="res-main" id="lueckeNominalMonat">–</div>
+          <div class="res-sub-label">Fehlender Betrag pro Jahr (14x)</div>
+          <div class="res-jahr" id="lueckeNominalJahr">–</div>
+        </div>
+      </div>
+
+    </div><!-- end two-col-result -->
 
     <button class="primary" id="weiterBtn" style="display:none;">Jetzt Beratung anfragen</button>
 
     <div class="footnote">
       Diese Berechnung ist eine unverbindliche Annäherung auf Basis Ihrer Angaben.
-      Da Ihr tatsächliches Pensionskonto nicht abgerufen werden kann, wird Ihr bisheriges
-      Einkommen rückwärts hochgerechnet. Die Berechnung berücksichtigt die gesetzliche
-      Höchstbeitragsgrundlage mit echten historischen Werten (2004–2026) und +3,2 % p.a.
-      Hochrechnung für die Zukunft. Pensionsantrittsalter: 65 Jahre. Alle Angaben ohne Gewähr.
+      Die BU-Pension wird nach APG §6 berechnet inkl. Zurechnungsmonate und Abschlag.
+      Anspruchsprüfung gemäß Wartezeitregelung für ab 1964 geborene Personen.
+      Pensionsantrittsalter Alterspension: 65 Jahre. Alle Angaben ohne Gewähr.
     </div>
   </div>
 
@@ -507,6 +721,51 @@ const fmtK = (n) => n.toLocaleString('de-AT', {minimumFractionDigits: 0, maximum
 
 let lastResult = null;
 
+// ═══════════════════════════════════════════════════════════════════════════
+// ▼▼▼  JÄHRLICH AKTUALISIEREN — Stand: Jänner 2026  ▼▼▼
+// ═══════════════════════════════════════════════════════════════════════════
+const STEUERWERTE = {
+  // ── Lohnsteuertarifstufen (Jahresbemessungsgrundlage nach SV-Abzug) ──
+  tarifstufen: [
+    { bis: 13539,    satz: 0.00 },
+    { bis: 21992,    satz: 0.20 },
+    { bis: 36458,    satz: 0.30 },
+    { bis: 70365,    satz: 0.40 },
+    { bis: 104859,   satz: 0.48 },
+    { bis: 1000000,  satz: 0.50 },
+    { bis: Infinity, satz: 0.55 },
+  ],
+
+  // ── Absetzbeträge (Jahreswerte) ──
+  vab: 496,       // Verkehrsabsetzbetrag (Arbeitnehmer)
+  pab: 1020,      // Pensionistenabsetzbetrag
+  pab_einschliff_von: 21614,   // PAB Einschleifen ab
+  pab_einschliff_bis: 31494,   // PAB Einschleifen bis (dann 0)
+
+  // ── SV-Sätze Arbeitnehmer ──
+  sv_kv:  0.0387,   // Krankenversicherung
+  sv_pv:  0.1025,   // Pensionsversicherung
+  sv_ak:  0.0050,   // Arbeiterkammerumlage
+  sv_wbf: 0.0050,   // Wohnbauförderungsbeitrag
+  // Arbeitslosenversicherung (gestaffelt nach Monatsbrutto):
+  av_stufen: [
+    { bis: 2225, satz: 0.00 },
+    { bis: 2427, satz: 0.01 },
+    { bis: 2630, satz: 0.02 },
+    { bis: Infinity, satz: 0.0295 },
+  ],
+
+  // ── SV-Satz Pensionisten ──
+  sv_pensionist: 0.051,  // KV für Pensionisten
+
+  // ── Sonderzahlungen Freibetrag ──
+  sonder_freibetrag: 620,  // Steuerfrei für 13./14. Bezug
+};
+// ═══════════════════════════════════════════════════════════════════════════
+// ▲▲▲  ENDE JÄHRLICHE KONFIGURATION  ▲▲▲
+// ═══════════════════════════════════════════════════════════════════════════
+
+// HBG — historische Werte + Hochrechnung
 const HBG_HISTORISCH = {
   2004: 3450, 2005: 3630, 2006: 3750, 2007: 3840, 2008: 3930,
   2009: 4020, 2010: 4110, 2011: 4200, 2012: 4230, 2013: 4440,
@@ -537,54 +796,116 @@ document.getElementById('einkommen').addEventListener('input', function() {
   } else hinweis.textContent = '';
 });
 
-// Korrigierte Brutto-Netto-Berechnung mit begünstigter Besteuerung der Sonderzahlungen (13./14. Bezug)
+// Korrigierte Brutto-Netto-Berechnung Pensionisten 2026
+// Brutto-Netto Pensionisten — verwendet STEUERWERTE
 function bruttoZuNettoMonat(monatsBrutto) {
-  const stufen = [
-    { bis: 12816, satz: 0.00 }, { bis: 20818, satz: 0.20 },
-    { bis: 34513, satz: 0.30 }, { bis: 66612, satz: 0.40 },
-    { bis: 99266, satz: 0.48 }, { bis: 1000000, satz: 0.50 },
-    { bis: Infinity, satz: 0.55 }
-  ];
-
   function berechneSteuer(bemessung) {
     let steuer = 0, grenze = 0;
-    for (const s of stufen) {
-      if (bemessung > grenze) {
-        steuer += (Math.min(bemessung, s.bis) - grenze) * s.satz;
-        grenze = s.bis;
-      } else break;
+    for (const s of STEUERWERTE.tarifstufen) {
+      if (bemessung > grenze) { steuer += (Math.min(bemessung, s.bis) - grenze) * s.satz; grenze = s.bis; }
+      else break;
     }
     return steuer;
   }
-
   function grenzSatz(bemessung) {
-    for (const s of stufen) { if (bemessung <= s.bis) return s.satz; }
+    for (const s of STEUERWERTE.tarifstufen) { if (bemessung <= s.bis) return s.satz; }
     return 0.55;
   }
-
-  // SV: 5,1% KV für Pensionisten
-  const sv = monatsBrutto * 0.051;
+  const sv = monatsBrutto * STEUERWERTE.sv_pensionist;
   const monatNachSV = monatsBrutto - sv;
-
-  // Lohnsteuer auf laufenden Bezug (12 Monate)
   const jahresBemessung = monatNachSV * 12;
-  const PAB_MAX = 1405;
   let pab = 0;
-  if (jahresBemessung <= 20500) pab = PAB_MAX;
-  else if (jahresBemessung < 30000) pab = PAB_MAX * (1 - (jahresBemessung - 20500) / 9500);
-  const steuerJahrLaufend = Math.max(0, berechneSteuer(jahresBemessung) - pab);
-  const steuerMonat = steuerJahrLaufend / 12;
+  if (jahresBemessung <= STEUERWERTE.pab_einschliff_von) pab = STEUERWERTE.pab;
+  else if (jahresBemessung < STEUERWERTE.pab_einschliff_bis)
+    pab = STEUERWERTE.pab * (1 - (jahresBemessung - STEUERWERTE.pab_einschliff_von) / (STEUERWERTE.pab_einschliff_bis - STEUERWERTE.pab_einschliff_von));
+  const steuerMonat = Math.max(0, berechneSteuer(jahresBemessung) - pab) / 12;
   const nettoMonat = monatNachSV - steuerMonat;
-
-  // Begünstigte Besteuerung Sonderzahlungen (13. + 14. Bezug)
-  // Freibetrag €620, darüber: max(6%, Grenzsteuersatz/2)
   const sonderSatz = Math.max(0.06, grenzSatz(jahresBemessung) / 2);
-  const sonderNachSV = monatsBrutto - (monatsBrutto * 0.051);
-  const sonderSteuer = Math.max(0, sonderNachSV - 620) * sonderSatz;
-  const nettoSonder = sonderNachSV - sonderSteuer;
-
-  // Jahresnetto ÷ 14 = monatlicher Pensionsbetrag
+  const sonderNachSV = monatsBrutto * (1 - STEUERWERTE.sv_pensionist);
+  const nettoSonder = sonderNachSV - Math.max(0, sonderNachSV - STEUERWERTE.sonder_freibetrag) * sonderSatz;
   return (nettoMonat * 12 + nettoSonder * 2) / 14;
+}
+
+// Brutto-Netto Arbeitnehmer — verwendet STEUERWERTE
+function gehaltBruttoZuNettoMonat(monatsBrutto) {
+  function berechneSteuer(bemessung) {
+    let steuer = 0, grenze = 0;
+    for (const s of STEUERWERTE.tarifstufen) {
+      if (bemessung > grenze) { steuer += (Math.min(bemessung, s.bis) - grenze) * s.satz; grenze = s.bis; }
+      else break;
+    }
+    return steuer;
+  }
+  function grenzSatz(bemessung) {
+    for (const s of STEUERWERTE.tarifstufen) { if (bemessung <= s.bis) return s.satz; }
+    return 0.55;
+  }
+  const kv  = monatsBrutto * STEUERWERTE.sv_kv;
+  const pv  = monatsBrutto * STEUERWERTE.sv_pv;
+  const ak  = monatsBrutto * STEUERWERTE.sv_ak;
+  const wbf = monatsBrutto * STEUERWERTE.sv_wbf;
+  let av = 0;
+  for (const s of STEUERWERTE.av_stufen) { if (monatsBrutto <= s.bis) { av = monatsBrutto * s.satz; break; } }
+  const sv = kv + pv + av + ak + wbf;
+  const monatNachSV = monatsBrutto - sv;
+  const jahresBemessung = monatNachSV * 12;
+  const steuerMonat = Math.max(0, berechneSteuer(jahresBemessung) - STEUERWERTE.vab) / 12;
+  const nettoMonat = monatNachSV - steuerMonat;
+  const sonderSVSatz = STEUERWERTE.sv_kv + STEUERWERTE.sv_pv + STEUERWERTE.sv_ak + STEUERWERTE.sv_wbf + 0.03;
+  const sonderNachSV = monatsBrutto * (1 - sonderSVSatz);
+  const nettoSonder = sonderNachSV - Math.max(0, sonderNachSV - STEUERWERTE.sonder_freibetrag) * 0.06;
+  return (nettoMonat * 12 + nettoSonder * 2) / 14;
+}
+
+// ─── BU-Anspruchsprüfung (Wartezeit, ab 1964 geboren) ───────────────────────
+function pruefeBUAnspruch(alter, versicherungsMonate) {
+  if (alter < 27) {
+    if (versicherungsMonate >= 6) return { anspruch: true, grund: `Wartezeit erfüllt (${versicherungsMonate} Versicherungsmonate). Hinweis: Unter 27 Jahren besteht ein BU-Anspruch frühestens ab 6 Versicherungsmonaten.` };
+    return { anspruch: false, grund: `Kein Anspruch: Unter 27 Jahren sind mind. 6 Versicherungsmonate erforderlich (vorhanden: ${versicherungsMonate}). Hinweis: 1 eingegebenes Berufsjahr entspricht 12 Versicherungsmonaten.` };
+  }
+  if (alter < 50) {
+    // 60 VM innerhalb der letzten 120 Kalendermonate
+    // Vereinfachung: wenn VM >= 60 annehmen wir die letzten 120 Monate sind abgedeckt
+    if (versicherungsMonate >= 60) return { anspruch: true, grund: `Wartezeit erfüllt (${versicherungsMonate} Versicherungsmonate)` };
+    // Alternativ: 180 Beitragsmonate oder 300 VM gesamt
+    if (versicherungsMonate >= 180) return { anspruch: true, grund: `Wartezeit erfüllt (${versicherungsMonate} Versicherungsmonate gesamt)` };
+    return { anspruch: false, grund: `Kein Anspruch: Zwischen 27 und 50 Jahren sind mind. 60 Versicherungsmonate in den letzten 120 Kalendermonaten erforderlich (vorhanden: ${versicherungsMonate}).` };
+  }
+  // Ab 50: gestaffelt — 60 VM in 120 Monaten + 1 VM je weiteren Lebensmonat, max 180 VM in 360 Monaten
+  const zusatz = Math.min(alter * 12 - 600, 120); // Monate über 50. Geburtstag, max 120
+  const mindestVM = Math.min(60 + zusatz, 180);
+  if (versicherungsMonate >= mindestVM) return { anspruch: true, grund: `Wartezeit erfüllt (${versicherungsMonate} von ${mindestVM} erforderlichen Versicherungsmonaten)` };
+  if (versicherungsMonate >= 180) return { anspruch: true, grund: `Wartezeit erfüllt (${versicherungsMonate} Versicherungsmonate gesamt)` };
+  return { anspruch: false, grund: `Kein Anspruch: Ab 50 Jahren sind mind. ${mindestVM} Versicherungsmonate erforderlich (vorhanden: ${versicherungsMonate}).` };
+}
+
+// ─── BU-Pension berechnen ────────────────────────────────────────────────────
+function berechneBUPension(kontostand, versicherungsMonate, geburtsdatum, heute) {
+  // Zurechnungsmonate: Monate von heute bis Monatserster nach 60. Geburtstag
+  const geburtstag60 = new Date(geburtsdatum.getFullYear() + 60, geburtsdatum.getMonth() + 1, 1);
+  let zurechnungsMonate = 0;
+  if (heute < geburtstag60) {
+    const diffMs = geburtstag60 - heute;
+    zurechnungsMonate = Math.floor(diffMs / (1000 * 60 * 60 * 24 * 30.4375));
+    // Deckelung: min(ZM, 469 - VM)
+    zurechnungsMonate = Math.max(0, Math.min(zurechnungsMonate, 469 - versicherungsMonate));
+  }
+
+  // Neue Gesamtgutschrift = Kontostand × (V + Z) / V
+  const neueGutschrift = versicherungsMonate > 0
+    ? kontostand * (versicherungsMonate + zurechnungsMonate) / versicherungsMonate
+    : kontostand;
+
+  // Abschlag: 0,35% pro Monat bis 65, max 39 Monate
+  const pensionsalter65 = new Date(geburtsdatum.getFullYear() + 65, geburtsdatum.getMonth(), geburtsdatum.getDate());
+  const monateZu65 = Math.max(0, Math.floor((pensionsalter65 - heute) / (1000 * 60 * 60 * 24 * 30.4375)));
+  const abschlagMonate = Math.min(monateZu65, 39);
+  const abschlag = abschlagMonate * 0.0035;
+
+  // BU-Bruttopension
+  const buBrutto = neueGutschrift * (1 - abschlag) / 14;
+
+  return { buBrutto, zurechnungsMonate, abschlagMonate, abschlag, neueGutschrift };
 }
 
 function berechneInflationsabhaengig() {
@@ -616,12 +937,17 @@ document.getElementById('berechnen').addEventListener('click', () => {
   const steigerung = parseFloat(document.getElementById('steigerung').value);
   const aufwertung = parseFloat(document.getElementById('aufwertung').value);
 
-  if (!geburtsdatumStr || isNaN(einkommen) || isNaN(berufsjahre)) {
-    alert('Bitte Geburtsdatum, aktuelles Bruttoeinkommen und Berufsjahre angeben.');
-    return;
+  const formFehler = document.getElementById('formFehler');
+  formFehler.style.display = 'none';
+
+  function zeigeFormFehler(text) {
+    formFehler.textContent = '⚠️ ' + text;
+    formFehler.style.display = 'block';
+    formFehler.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
-  if (teilzeitJahre + ohneJahre > berufsjahre) {
-    alert('Teilzeit- und beschäftigungslose Jahre dürfen nicht mehr als die gesamten Berufsjahre sein.');
+
+  if (!geburtsdatumStr || isNaN(einkommen) || isNaN(berufsjahre)) {
+    zeigeFormFehler('Bitte Geburtsdatum, aktuelles Bruttoeinkommen und Berufsjahre angeben.');
     return;
   }
 
@@ -632,21 +958,56 @@ document.getElementById('berechnen').addEventListener('click', () => {
   const monatDiff = heute.getMonth() - geburtsdatum.getMonth();
   if (monatDiff < 0 || (monatDiff === 0 && heute.getDate() < geburtsdatum.getDate())) alter--;
 
+  if (teilzeitJahre + ohneJahre > berufsjahre) {
+    zeigeFormFehler('Teilzeit- und beschäftigungslose Jahre dürfen nicht mehr als die gesamten Berufsjahre sein.');
+    return;
+  }
+  const maxBerufsjahre = Math.max(0, alter - 15);
+  if (berufsjahre > maxBerufsjahre) {
+    zeigeFormFehler(`Bei einem Alter von ${alter} Jahren sind maximal ${maxBerufsjahre} Berufsjahre möglich (frühester Berufseintritt mit 15 Jahren).`);
+    return;
+  }
+
   let jahreBisPension = Math.max(0, 65 - alter);
   const vollzeitJahre = berufsjahre - teilzeitJahre - ohneJahre;
-  const avgGewichtung = berufsjahre > 0
-    ? (vollzeitJahre * 1 + teilzeitJahre * 0.5 + ohneJahre * 0) / berufsjahre : 1;
 
   const GUTSCHRIFTSATZ = 0.0178;
   const jahresEinkommenAktuell = einkommen * 14;
-  let kontostand = 0, hbgGedeckeltJahre = 0;
 
+  // Hilfsfunktion: effektives Jahreseinkommen je Jahr k (rückwärts)
+  // Teilzeit/ohne werden über Einkommensreduktion simuliert
+  // Wir verteilen Teilzeit/ohne Jahre gleichmäßig über die Berufsjahre (vereinfacht)
+  function einkommenFaktorFuerJahrK(k) {
+    // Anteil Vollzeit/Teilzeit/ohne über alle Berufsjahre gleichmäßig verteilt
+    const anteilVollzeit = vollzeitJahre / berufsjahre;
+    const anteilTeilzeit = teilzeitJahre / berufsjahre;
+    // ohneJahre = 0% Einkommen → werden nicht separat addiert
+    return anteilVollzeit * 1.0 + anteilTeilzeit * 0.5;
+  }
+
+  // ─── Kontostand heute (für BU) ───────────────────────────────────────────
+  // Nur vergangene Jahre, Aufwertung nur bis heute (= 0 weitere Jahre)
+  let kontostandHeute = 0;
+  let hbgGedeckeltJahre = 0;
   for (let k = 1; k <= berufsjahre; k++) {
     const hbgJ = getHBG(aktuellesJahr - k) * 14;
-    const einkJ = jahresEinkommenAktuell / Math.pow(1 + steigerung, k);
+    const einkommenFaktor = einkommenFaktorFuerJahrK(k);
+    const einkJ = (jahresEinkommenAktuell / Math.pow(1 + steigerung, k)) * einkommenFaktor;
     const bg = Math.min(einkJ, hbgJ);
     if (einkJ > hbgJ) hbgGedeckeltJahre++;
-    kontostand += bg * GUTSCHRIFTSATZ * avgGewichtung * Math.pow(1 + aufwertung, jahreBisPension + k);
+    // Aufwertung bis heute: k Jahre (vom damaligen Jahr bis jetzt)
+    kontostandHeute += bg * GUTSCHRIFTSATZ * Math.pow(1 + aufwertung, k);
+  }
+
+  // ─── Kontostand bei Pensionsantritt (für Alterspension) ──────────────────
+  // Vergangene Jahre (aufgewertet bis 65) + zukünftige Jahre
+  let kontostand = 0;
+  for (let k = 1; k <= berufsjahre; k++) {
+    const hbgJ = getHBG(aktuellesJahr - k) * 14;
+    const einkommenFaktor = einkommenFaktorFuerJahrK(k);
+    const einkJ = (jahresEinkommenAktuell / Math.pow(1 + steigerung, k)) * einkommenFaktor;
+    const bg = Math.min(einkJ, hbgJ);
+    kontostand += bg * GUTSCHRIFTSATZ * Math.pow(1 + aufwertung, jahreBisPension + k);
   }
   for (let j = 0; j < jahreBisPension; j++) {
     const hbgJ = getHBG(aktuellesJahr + j) * 14;
@@ -659,14 +1020,15 @@ document.getElementById('berechnen').addEventListener('click', () => {
   const monatlichePension = kontostand / 14;
   const letztesMonatsgehalt = jahresEinkommenAktuell * Math.pow(1 + steigerung, Math.max(jahreBisPension - 1, 0)) / 14;
   const hbgBeiPension = getHBG(aktuellesJahr + jahreBisPension);
+  const einkommenFaktorGesamt = vollzeitJahre / berufsjahre + (teilzeitJahre / berufsjahre) * 0.5;
 
   const pensionNettoNominal = bruttoZuNettoMonat(monatlichePension);
-  const letztesGehaltNettoNominal = bruttoZuNettoMonat(letztesMonatsgehalt);
+  const letztesGehaltNettoNominal = gehaltBruttoZuNettoMonat(letztesMonatsgehalt);
 
   lastResult = {
     pensionNettoNominal, pensionBruttoNominal: monatlichePension,
     jahreBisPension, letztesGehaltNettoNominal, alter, berufsjahre,
-    avgGewichtung, kontostand, aktuellesJahr, hbgBeiPension, hbgGedeckeltJahre,
+    kontostand, kontostandHeute, aktuellesJahr, hbgBeiPension, hbgGedeckeltJahre,
     steigerung, aufwertung
   };
 
@@ -677,18 +1039,62 @@ document.getElementById('berechnen').addEventListener('click', () => {
   document.getElementById('detailTable').innerHTML = `
     <tr><td>Aktuelles Alter</td><td>${alter} Jahre</td></tr>
     <tr><td>Jahre bis Pensionsantritt (65)</td><td>${jahreBisPension} Jahre</td></tr>
-    <tr><td>Bisherige Berufsjahre</td><td>${berufsjahre} Jahre (Ø ${(avgGewichtung*100).toFixed(0)} %)</td></tr>
+    <tr><td>Bisherige Berufsjahre</td><td>${berufsjahre} Jahre</td></tr>
     <tr><td>HBG aktuell (${aktuellesJahr})</td><td>€ ${fmtK(getHBG(aktuellesJahr))} / Monat</td></tr>
     <tr><td>HBG bei Pensionsantritt (${aktuellesJahr + jahreBisPension})</td><td>€ ${fmtK(hbgBeiPension)} / Monat</td></tr>
     <tr><td>HBG-Deckelung</td><td>${hbgText}</td></tr>
+    <tr><td>Guthaben Pensionskonto heute (für BU)</td><td>€ ${fmt(kontostandHeute)}</td></tr>
     <tr><td>Guthaben Pensionskonto bei Pensionsantritt</td><td>€ ${fmt(kontostand)}</td></tr>
-    <tr><td>Bruttopension monatlich</td><td>€ ${fmt(kontostand / 14)}</td></tr>
+    <tr><td>Bruttopension monatlich</td><td>€ ${fmt(monatlichePension)}</td></tr>
   `;
 
-  document.getElementById('gehaltNetto').innerHTML = '€ ' + fmt(letztesGehaltNettoNominal) + '<span> / Monat</span>';
+  document.getElementById('gehaltNetto').innerHTML = '€ ' + fmt(letztesGehaltNettoNominal) + ' / Monat';
   document.getElementById('gehaltNettoJahr').textContent = '€ ' + fmt(letztesGehaltNettoNominal * 14) + ' / Jahr (14x)';
   document.getElementById('pensionNominalMonat').textContent = '€ ' + fmt(pensionNettoNominal) + ' / Monat';
   document.getElementById('pensionNominalJahr').textContent = '€ ' + fmt(pensionNettoNominal * 14) + ' / Jahr (14x)';
+
+  // ─── BU-Berechnung ──────────────────────────────────────────────────────
+  const versicherungsMonate = berufsjahre * 12;
+  const buAnspruch = pruefeBUAnspruch(alter, versicherungsMonate);
+  const aktuellsNettoMonat = gehaltBruttoZuNettoMonat(einkommen);
+
+  const buHinweis = document.getElementById('buHinweis');
+  buHinweis.style.display = 'block';
+
+  if (!buAnspruch.anspruch) {
+    buHinweis.className = 'bu-hinweis-warn';
+    buHinweis.textContent = '⚠️ ' + buAnspruch.grund;
+    document.getElementById('buPensionBlock').style.display = 'none';
+    document.getElementById('buLueckeBlock').style.display = 'none';
+    document.getElementById('buEinkommen').textContent = '€ ' + fmt(aktuellsNettoMonat) + ' / Monat';
+    document.getElementById('buEinkommenJahr').textContent = '€ ' + fmt(aktuellsNettoMonat * 14) + ' / Jahr (14x)';
+  } else {
+    buHinweis.className = 'bu-hinweis-ok';
+    buHinweis.textContent = '✓ ' + buAnspruch.grund;
+    document.getElementById('buPensionBlock').style.display = 'block';
+    document.getElementById('buLueckeBlock').style.display = 'block';
+
+    const { buBrutto, zurechnungsMonate, abschlagMonate, abschlag } = berechneBUPension(
+      kontostandHeute, versicherungsMonate, geburtsdatum, heute
+    );
+    const buNetto = bruttoZuNettoMonat(buBrutto);
+    const buLuecke = Math.max(0, aktuellsNettoMonat - buNetto);
+
+    document.getElementById('buEinkommen').textContent = '€ ' + fmt(aktuellsNettoMonat) + ' / Monat';
+    document.getElementById('buEinkommenJahr').textContent = '€ ' + fmt(aktuellsNettoMonat * 14) + ' / Jahr (14x)';
+    document.getElementById('buPension').textContent = '€ ' + fmt(buNetto) + ' / Monat';
+    document.getElementById('buPensionJahr').textContent = '€ ' + fmt(buNetto * 14) + ' / Jahr (14x)';
+    document.getElementById('buLueckeMonat').textContent = '€ ' + fmt(buLuecke) + ' / Monat';
+    document.getElementById('buLueckeJahr').textContent = '€ ' + fmt(buLuecke * 14);
+    document.getElementById('detailTable').innerHTML += `
+      <tr><td>Versicherungsmonate (aktuell)</td><td>${versicherungsMonate} Monate</td></tr>
+      <tr><td>Zurechnungsmonate (BU)</td><td>${zurechnungsMonate} Monate</td></tr>
+      <tr><td>Abschlag (BU)</td><td>${abschlagMonate} Monate × 0,35 % = ${(abschlag*100).toFixed(2)} %</td></tr>
+      <tr><td>BU-Bruttopension monatlich</td><td>€ ${fmt(buBrutto)}</td></tr>
+    `;
+
+    lastResult = { ...lastResult, buNetto, buLuecke, aktuellsNettoMonat, zurechnungsMonate, abschlag };
+  }
 
   berechneInflationsabhaengig();
 
