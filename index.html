@@ -1175,6 +1175,69 @@ document.getElementById('sendenBtn').addEventListener('click', async () => {
     alert('Fehler: ' + err.message);
   }
 });
+/* ==========================================================================
+   ZUGANGSSCHUTZ – zentral verwaltet über tools-admin
+   ========================================================================== */
+(function(){
+  const TOOL = 'pensionsrechner';
+  const CHECK_URL = 'https://ncudchhyfpokanjtsmpf.supabase.co/functions/v1/check-access';
+
+  const overlay = document.createElement('div');
+  overlay.id = 'zugang-overlay';
+  overlay.style.cssText = 'position:fixed; inset:0; background:#f0f4f8; z-index:9999; display:flex; align-items:center; justify-content:center; padding:24px;';
+  overlay.innerHTML = `
+    <div style="background:#fff; border-radius:8px; padding:32px; max-width:400px; width:100%; box-shadow:0 1px 4px rgba(53,95,143,0.15); font-family:'Lato',Arial,sans-serif;">
+      <div style="font-size:11px; letter-spacing:0.15em; text-transform:uppercase; color:#6b8099; font-weight:700; margin-bottom:14px;">Geschützter Bereich</div>
+      <div style="font-size:15px; color:#1a2a3a; line-height:1.6; margin-bottom:18px;">Bitte geben Sie Ihren persönlichen Zugangscode ein.</div>
+      <input type="text" id="zugang-code" placeholder="Zugangscode" autocomplete="off"
+        style="width:100%; background:#e8eef5; border:1px solid #c8d5e3; border-radius:4px; padding:12px; font-size:16px; font-family:'Lato',Arial,sans-serif; box-sizing:border-box;">
+      <div id="zugang-fehler" style="color:#c0392b; font-size:13px; margin-top:10px; display:none;">Code ungültig oder Zugriff gesperrt.</div>
+      <button id="zugang-btn"
+        style="margin-top:16px; width:100%; background:#355f8f; color:#fff; border:none; border-radius:4px; padding:14px; font-size:14px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer; font-family:'Lato',Arial,sans-serif;">
+        Zugang prüfen</button>
+    </div>`;
+  document.body.appendChild(overlay);
+  document.body.style.overflow = 'hidden';
+
+  async function pruefen(code){
+    try{
+      const res = await fetch(CHECK_URL, {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ code, tool: TOOL })
+      });
+      const data = await res.json();
+      return data.ok === true;
+    }catch(e){ return false; }
+  }
+
+  function freigeben(){
+    overlay.remove();
+    document.body.style.overflow = '';
+  }
+
+  async function manuell(){
+    const code = document.getElementById('zugang-code').value.trim();
+    if(!code) return;
+    const btn = document.getElementById('zugang-btn');
+    btn.textContent = 'Wird geprüft...';
+    if(await pruefen(code)){
+      localStorage.setItem('toolZugangsCode', code);
+      freigeben();
+    }else{
+      btn.textContent = 'Zugang prüfen';
+      document.getElementById('zugang-fehler').style.display = 'block';
+    }
+  }
+
+  document.getElementById('zugang-btn').addEventListener('click', manuell);
+  document.getElementById('zugang-code').addEventListener('keydown', e => { if(e.key==='Enter') manuell(); });
+
+  // Gespeicherten Code still prüfen – Sperre wirkt so bei jedem Seitenaufruf
+  const gespeichert = localStorage.getItem('toolZugangsCode');
+  if(gespeichert){
+    pruefen(gespeichert).then(ok => { if(ok) freigeben(); });
+  }
+})();
 </script>
 </body>
 </html>
