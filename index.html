@@ -438,6 +438,33 @@
     font-weight: 700;
   }
 
+  .checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    color: var(--text);
+    font-weight: 600;
+    cursor: pointer;
+    text-transform: none;
+    letter-spacing: 0;
+  }
+  .checkbox-label input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--accent);
+    cursor: pointer;
+  }
+  .teilzeit-info {
+    background: #eef4fb;
+    border: 1px solid #c0d4ea;
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-size: 13px;
+    color: var(--accent);
+    font-weight: 400;
+  }
+
   .footnote{
     font-size: 12px;
     color: var(--muted);
@@ -505,24 +532,60 @@
       </div>
 
       <div class="field">
-        <label for="einkommen">Aktuelles Bruttoeinkommen (monatlich, 14x jährlich)</label>
-        <input type="number" id="einkommen" placeholder="z. B. 3200" min="0" step="10">
+        <label for="einkommen">Aktuelles Nettoeinkommen (monatlich)</label>
+        <input type="number" id="einkommen" placeholder="z. B. 1.900" min="0" step="10">
         <div class="hbg-info" id="hbgHinweis"></div>
       </div>
 
+      <!-- Teilzeit Checkbox -->
       <div class="field">
-        <label for="berufsjahre">Wie viele Jahre sind Sie bereits berufstätig?</label>
-        <input type="number" id="berufsjahre" placeholder="z. B. 15" min="0" step="1">
+        <label class="checkbox-label">
+          <input type="checkbox" id="teilzeitCheck">
+          <span>Ich bin aktuell in Teilzeit beschäftigt</span>
+        </label>
       </div>
 
-      <div class="row2">
-        <div class="field">
-          <label for="teilzeitJahre">Davon Jahre in Teilzeit</label>
-          <input type="number" id="teilzeitJahre" placeholder="z. B. 2" min="0" step="1" value="0">
+      <!-- Teilzeit-Felder — klappen auf -->
+      <div id="teilzeitFelder" style="display:none;" class="grid">
+        <div class="teilzeit-info">
+          ℹ️ Bitte geben Sie Ihre Teilzeit-Details an. Wir berechnen daraus Ihr Vollzeit-Äquivalent.
         </div>
         <div class="field">
-          <label for="ohneJahre">Davon Jahre ohne Beschäftigung</label>
+          <label for="wochenstunden">Ihre Wochenstunden (Teilzeit)</label>
+          <input type="number" id="wochenstunden" placeholder="z. B. 20" min="1" max="40" step="1">
+        </div>
+        <div class="row2">
+          <div class="field">
+            <label for="teilzeitSeit">Seit wie vielen Jahren in Teilzeit?</label>
+            <input type="number" id="teilzeitSeit" placeholder="z. B. 5" min="0" step="1" value="0">
+          </div>
+          <div class="field">
+            <label for="vollzeitVorher">Jahre davor in Vollzeit?</label>
+            <input type="number" id="vollzeitVorher" placeholder="z. B. 10" min="0" step="1" value="0">
+          </div>
+        </div>
+        <div class="field">
+          <label for="vollzeitWechsel">In wie vielen Jahren planen Sie, wieder auf Vollzeit zu wechseln?</label>
+          <div class="row2">
+            <input type="number" id="vollzeitWechsel" placeholder="z. B. 3" min="0" step="1" value="0">
+            <label class="checkbox-label" style="align-self:center;">
+              <input type="checkbox" id="keinWechsel">
+              <span>Gar nicht (bleibe in Teilzeit)</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Vollzeit-Felder (nur sichtbar wenn NICHT Teilzeit) -->
+      <div id="vollzeitFelder" class="row2">
+        <div class="field">
+          <label for="berufsjahre">Wie viele Jahre sind Sie bereits berufstätig?</label>
+          <input type="number" id="berufsjahre" placeholder="z. B. 15" min="0" step="1">
+        </div>
+        <div class="field">
+          <label for="ohneJahre">Davon Jahre in geringfügiger Beschäftigung oder Arbeitslosigkeit</label>
           <input type="number" id="ohneJahre" placeholder="z. B. 0" min="0" step="1" value="0">
+          <div style="font-size:11px; color:#6b8099; margin-top:4px;">In diesen Jahren werden keine Pensionskonto-Gutschriften angesammelt.</div>
         </div>
       </div>
 
@@ -782,16 +845,51 @@ function getHBG(jahr) {
   return 3450 / Math.pow(1 + HBG_STEIGERUNG, 2004 - jahr);
 }
 
+// ─── Netto → Brutto Umkehrfunktion (Bisektionssuche) ────────────────────────
+function nettoBrutto(nettoZiel, fnBruttoZuNetto) {
+  let lo = 0, hi = 50000;
+  for (let i = 0; i < 60; i++) {
+    const mid = (lo + hi) / 2;
+    if (fnBruttoZuNetto(mid) < nettoZiel) lo = mid;
+    else hi = mid;
+  }
+  return (lo + hi) / 2;
+}
+
+// ─── Checkbox Toggle ─────────────────────────────────────────────────────────
+document.getElementById('teilzeitCheck').addEventListener('change', function() {
+  const teilzeit = this.checked;
+  document.getElementById('teilzeitFelder').style.display = teilzeit ? 'grid' : 'none';
+  document.getElementById('vollzeitFelder').style.display = teilzeit ? 'none' : 'grid';
+});
+
+document.getElementById('keinWechsel').addEventListener('change', function() {
+  document.getElementById('vollzeitWechsel').disabled = this.checked;
+  if (this.checked) document.getElementById('vollzeitWechsel').value = '';
+});
+
+// ─── Einkommens-Hinweis ───────────────────────────────────────────────────────
 document.getElementById('einkommen').addEventListener('input', function() {
   const val = parseFloat(this.value);
-  const hbgAktuell = getHBG(new Date().getFullYear());
   const hinweis = document.getElementById('hbgHinweis');
   if (!isNaN(val) && val > 0) {
-    if (val > hbgAktuell)
-      hinweis.textContent = `Achtung: Ihr Einkommen übersteigt die Höchstbeitragsgrundlage 2026 von € ${fmtK(hbgAktuell)}. Für die Pension wird nur die HBG angerechnet.`;
-    else
-      hinweis.textContent = `Höchstbeitragsgrundlage 2026: € ${fmtK(hbgAktuell)} – Ihr Einkommen liegt darunter.`;
-  } else hinweis.textContent = '';
+    const GERINGFUEGIG_NETTO = 480; // ca. Netto bei €551 Brutto
+    if (val < GERINGFUEGIG_NETTO) {
+      hinweis.style.color = 'var(--warn)';
+      hinweis.textContent = `⚠️ Achtung: Bei einem Einkommen unter der Geringfügigkeitsgrenze (ca. €551 brutto / ~€480 netto) werden keine Pensionskonto-Gutschriften angesammelt.`;
+    } else {
+      const bruttoGeschaetzt = nettoBrutto(val, gehaltBruttoZuNettoMonat);
+      const hbgAktuell = getHBG(new Date().getFullYear());
+      hinweis.style.color = 'var(--accent)';
+      if (bruttoGeschaetzt > hbgAktuell) {
+        hinweis.textContent = `Geschätztes Brutto: ca. €${fmtK(bruttoGeschaetzt)} – übersteigt die HBG 2026 (€${fmtK(hbgAktuell)}). Für die Pension wird nur die HBG angerechnet.`;
+      } else {
+        hinweis.textContent = `Geschätztes Brutto: ca. €${fmtK(bruttoGeschaetzt)} – HBG 2026: €${fmtK(hbgAktuell)}.`;
+      }
+    }
+  } else {
+    hinweis.textContent = '';
+  }
 });
 
 // Korrigierte Brutto-Netto-Berechnung Pensionisten 2026
@@ -928,12 +1026,10 @@ function berechneInflationsabhaengig() {
 
 document.getElementById('berechnen').addEventListener('click', () => {
   const geburtsdatumStr = document.getElementById('geburtsdatum').value;
-  const einkommen = parseFloat(document.getElementById('einkommen').value);
-  const berufsjahre = parseInt(document.getElementById('berufsjahre').value);
-  const teilzeitJahre = parseInt(document.getElementById('teilzeitJahre').value) || 0;
-  const ohneJahre = parseInt(document.getElementById('ohneJahre').value) || 0;
+  const nettoEinkommen = parseFloat(document.getElementById('einkommen').value);
   const steigerung = parseFloat(document.getElementById('steigerung').value);
   const aufwertung = parseFloat(document.getElementById('aufwertung').value);
+  const istTeilzeit = document.getElementById('teilzeitCheck').checked;
 
   const formFehler = document.getElementById('formFehler');
   formFehler.style.display = 'none';
@@ -944,8 +1040,8 @@ document.getElementById('berechnen').addEventListener('click', () => {
     formFehler.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
 
-  if (!geburtsdatumStr || isNaN(einkommen) || isNaN(berufsjahre)) {
-    zeigeFormFehler('Bitte Geburtsdatum, aktuelles Bruttoeinkommen und Berufsjahre angeben.');
+  if (!geburtsdatumStr || isNaN(nettoEinkommen)) {
+    zeigeFormFehler('Bitte Geburtsdatum und aktuelles Nettoeinkommen angeben.');
     return;
   }
 
@@ -956,69 +1052,113 @@ document.getElementById('berechnen').addEventListener('click', () => {
   const monatDiff = heute.getMonth() - geburtsdatum.getMonth();
   if (monatDiff < 0 || (monatDiff === 0 && heute.getDate() < geburtsdatum.getDate())) alter--;
 
-  if (teilzeitJahre + ohneJahre > berufsjahre) {
-    zeigeFormFehler('Teilzeit- und beschäftigungslose Jahre dürfen nicht mehr als die gesamten Berufsjahre sein.');
-    return;
-  }
   const maxBerufsjahre = Math.max(0, alter - 15);
-  if (berufsjahre > maxBerufsjahre) {
-    zeigeFormFehler(`Bei einem Alter von ${alter} Jahren sind maximal ${maxBerufsjahre} Berufsjahre möglich (frühester Berufseintritt mit 15 Jahren).`);
-    return;
+
+  // ─── Netto → Brutto umrechnen ──────────────────────────────────────────
+  const einkommen = nettoBrutto(nettoEinkommen, gehaltBruttoZuNettoMonat);
+
+  // ─── Teilzeit- oder Vollzeit-Modus ────────────────────────────────────
+  let berufsjahre, ohneJahre, teilzeitJahreVerg;
+  let vollzeitBrutto = einkommen; // Vollzeit-Äquivalent
+  let teilzeitFaktor = 1;
+  let teilzeitSeit = 0, vollzeitVorher = 0;
+  let jahreBisTeilzeitEnde = 0; // Jahre bis Rückkehr zu Vollzeit
+  let bleibtTeilzeit = false;
+
+  if (istTeilzeit) {
+    const wochenstunden = parseFloat(document.getElementById('wochenstunden').value);
+    teilzeitSeit = parseInt(document.getElementById('teilzeitSeit').value) || 0;
+    vollzeitVorher = parseInt(document.getElementById('vollzeitVorher').value) || 0;
+    bleibtTeilzeit = document.getElementById('keinWechsel').checked;
+    jahreBisTeilzeitEnde = bleibtTeilzeit ? 999 : (parseInt(document.getElementById('vollzeitWechsel').value) || 0);
+    console.log('vollzeitWechsel value:', document.getElementById('vollzeitWechsel').value);
+    console.log('jahreBisTeilzeitEnde:', jahreBisTeilzeitEnde);
+    ohneJahre = parseInt(document.getElementById('ohneJahre').value) || 0;
+
+    if (isNaN(wochenstunden) || wochenstunden <= 0) {
+      zeigeFormFehler('Bitte Wochenstunden angeben.');
+      return;
+    }
+
+    teilzeitFaktor = wochenstunden / 38.5;
+    vollzeitBrutto = einkommen / teilzeitFaktor;
+    berufsjahre = teilzeitSeit + vollzeitVorher;
+    teilzeitJahreVerg = teilzeitSeit;
+
+    if (berufsjahre > maxBerufsjahre) {
+      zeigeFormFehler(`Bei einem Alter von ${alter} Jahren sind maximal ${maxBerufsjahre} Berufsjahre möglich.`);
+      return;
+    }
+  } else {
+    berufsjahre = parseInt(document.getElementById('berufsjahre').value) || 0;
+    ohneJahre = parseInt(document.getElementById('ohneJahre').value) || 0;
+    teilzeitJahreVerg = 0;
+
+    if (isNaN(berufsjahre)) {
+      zeigeFormFehler('Bitte Berufsjahre angeben.');
+      return;
+    }
+    if (berufsjahre > maxBerufsjahre) {
+      zeigeFormFehler(`Bei einem Alter von ${alter} Jahren sind maximal ${maxBerufsjahre} Berufsjahre möglich (frühester Berufseintritt mit 15 Jahren).`);
+      return;
+    }
+    if (ohneJahre > berufsjahre) {
+      zeigeFormFehler('Geringfügige/Arbeitslosigkeitsjahre dürfen nicht mehr als die gesamten Berufsjahre sein.');
+      return;
+    }
   }
 
   let jahreBisPension = Math.max(0, 65 - alter);
-  const vollzeitJahre = berufsjahre - teilzeitJahre - ohneJahre;
-
   const GUTSCHRIFTSATZ = 0.0178;
   const jahresEinkommenAktuell = einkommen * 14;
+  const jahresVollzeitAktuell = vollzeitBrutto * 14;
 
-  // Hilfsfunktion: effektives Jahreseinkommen je Jahr k (rückwärts)
-  // Teilzeit/ohne werden über Einkommensreduktion simuliert
-  // Wir verteilen Teilzeit/ohne Jahre gleichmäßig über die Berufsjahre (vereinfacht)
-  function einkommenFaktorFuerJahrK(k) {
-    // Anteil Vollzeit/Teilzeit/ohne über alle Berufsjahre gleichmäßig verteilt
-    const anteilVollzeit = vollzeitJahre / berufsjahre;
-    const anteilTeilzeit = teilzeitJahre / berufsjahre;
-    // ohneJahre = 0% Einkommen → werden nicht separat addiert
-    return anteilVollzeit * 1.0 + anteilTeilzeit * 0.5;
+  function einkommenJahrVergangen(k) {
+    if (istTeilzeit && k <= teilzeitSeit) return jahresEinkommenAktuell / Math.pow(1 + steigerung, k);
+    return jahresVollzeitAktuell / Math.pow(1 + steigerung, k);
+  }
+
+  function einkommenJahrZukunft(j) {
+    if (istTeilzeit && j < jahreBisTeilzeitEnde) {
+      return jahresEinkommenAktuell * Math.pow(1 + steigerung, j);
+    }
+    return jahresVollzeitAktuell * Math.pow(1 + steigerung, j);
   }
 
   // ─── Kontostand heute (für BU) ───────────────────────────────────────────
-  // Nur vergangene Jahre, Aufwertung nur bis heute (= 0 weitere Jahre)
   let kontostandHeute = 0;
   let hbgGedeckeltJahre = 0;
   for (let k = 1; k <= berufsjahre; k++) {
     const hbgJ = getHBG(aktuellesJahr - k) * 14;
-    const einkommenFaktor = einkommenFaktorFuerJahrK(k);
-    const einkJ = (jahresEinkommenAktuell / Math.pow(1 + steigerung, k)) * einkommenFaktor;
+    const istOhneJahr = k <= ohneJahre;
+    const einkJ = istOhneJahr ? 0 : einkommenJahrVergangen(k);
     const bg = Math.min(einkJ, hbgJ);
     if (einkJ > hbgJ) hbgGedeckeltJahre++;
-    // Aufwertung bis heute: k Jahre (vom damaligen Jahr bis jetzt)
     kontostandHeute += bg * GUTSCHRIFTSATZ * Math.pow(1 + aufwertung, k);
   }
 
   // ─── Kontostand bei Pensionsantritt (für Alterspension) ──────────────────
-  // Vergangene Jahre (aufgewertet bis 65) + zukünftige Jahre
   let kontostand = 0;
   for (let k = 1; k <= berufsjahre; k++) {
     const hbgJ = getHBG(aktuellesJahr - k) * 14;
-    const einkommenFaktor = einkommenFaktorFuerJahrK(k);
-    const einkJ = (jahresEinkommenAktuell / Math.pow(1 + steigerung, k)) * einkommenFaktor;
+    const istOhneJahr = k <= ohneJahre;
+    const einkJ = istOhneJahr ? 0 : einkommenJahrVergangen(k);
     const bg = Math.min(einkJ, hbgJ);
     kontostand += bg * GUTSCHRIFTSATZ * Math.pow(1 + aufwertung, jahreBisPension + k);
   }
   for (let j = 0; j < jahreBisPension; j++) {
     const hbgJ = getHBG(aktuellesJahr + j) * 14;
-    const einkJ = jahresEinkommenAktuell * Math.pow(1 + steigerung, j);
+    const einkJ = einkommenJahrZukunft(j);
     const bg = Math.min(einkJ, hbgJ);
     if (einkJ > hbgJ) hbgGedeckeltJahre++;
     kontostand += bg * GUTSCHRIFTSATZ * Math.pow(1 + aufwertung, jahreBisPension - j);
   }
 
+  // Letztes Gehalt vor Pension = Vollzeit (nach eventuellem Wechsel)
+  const letztesMonatsgehalt = einkommenJahrZukunft(Math.max(jahreBisPension - 1, 0)) / 14;
+
   const monatlichePension = kontostand / 14;
-  const letztesMonatsgehalt = jahresEinkommenAktuell * Math.pow(1 + steigerung, Math.max(jahreBisPension - 1, 0)) / 14;
   const hbgBeiPension = getHBG(aktuellesJahr + jahreBisPension);
-  const einkommenFaktorGesamt = vollzeitJahre / berufsjahre + (teilzeitJahre / berufsjahre) * 0.5;
 
   const pensionNettoNominal = bruttoZuNettoMonat(monatlichePension);
   const letztesGehaltNettoNominal = gehaltBruttoZuNettoMonat(letztesMonatsgehalt);
@@ -1034,10 +1174,17 @@ document.getElementById('berechnen').addEventListener('click', () => {
     ? `In ${hbgGedeckeltJahre} von ${berufsjahre + jahreBisPension} Jahren greift die HBG-Deckelung`
     : `Die HBG-Deckelung greift in keinem Jahr`;
 
+  const teilzeitHinweis = istTeilzeit
+    ? `<tr><td>Teilzeitfaktor</td><td>${(teilzeitFaktor * 100).toFixed(0)} % (${document.getElementById('wochenstunden').value}h / 38,5h)</td></tr>
+       <tr><td>Vollzeit-Äquivalent Brutto</td><td>€ ${fmt(vollzeitBrutto)} / Monat</td></tr>
+       ${!bleibtTeilzeit ? `<tr><td>Rückkehr zu Vollzeit in</td><td>${jahreBisTeilzeitEnde} Jahren</td></tr>` : '<tr><td>Teilzeit</td><td>Bleibt dauerhaft</td></tr>'}`
+    : '';
+
   document.getElementById('detailTable').innerHTML = `
     <tr><td>Aktuelles Alter</td><td>${alter} Jahre</td></tr>
     <tr><td>Jahre bis Pensionsantritt (65)</td><td>${jahreBisPension} Jahre</td></tr>
     <tr><td>Bisherige Berufsjahre</td><td>${berufsjahre} Jahre</td></tr>
+    ${teilzeitHinweis}
     <tr><td>HBG aktuell (${aktuellesJahr})</td><td>€ ${fmtK(getHBG(aktuellesJahr))} / Monat</td></tr>
     <tr><td>HBG bei Pensionsantritt (${aktuellesJahr + jahreBisPension})</td><td>€ ${fmtK(hbgBeiPension)} / Monat</td></tr>
     <tr><td>HBG-Deckelung</td><td>${hbgText}</td></tr>
@@ -1076,10 +1223,21 @@ document.getElementById('berechnen').addEventListener('click', () => {
       kontostandHeute, versicherungsMonate, geburtsdatum, heute
     );
     const buNetto = bruttoZuNettoMonat(buBrutto);
-    const buLuecke = Math.max(0, aktuellsNettoMonat - buNetto);
 
-    document.getElementById('buEinkommen').textContent = '€ ' + fmt(aktuellsNettoMonat) + ' / Monat';
-    document.getElementById('buEinkommenJahr').textContent = '€ ' + fmt(aktuellsNettoMonat * 14) + ' / Jahr (14x)';
+    // Vergleich: bei Teilzeit mit Vollzeit-Netto, sonst aktuelles Netto
+    const vollzeitNettoMonat = istTeilzeit ? gehaltBruttoZuNettoMonat(vollzeitBrutto) : aktuellsNettoMonat;
+    const buVergleichsEinkommen = vollzeitNettoMonat;
+    const buLuecke = Math.max(0, buVergleichsEinkommen - buNetto);
+
+    // Label anpassen je nach Modus
+    const buEinkommenLabel = istTeilzeit
+      ? `Vollzeit-Nettoeinkommen (Vergleichsbasis bei BU)`
+      : `Aktuelles Nettoeinkommen`;
+
+    document.getElementById('buEinkommen').textContent = '€ ' + fmt(buVergleichsEinkommen) + ' / Monat';
+    document.getElementById('buEinkommenJahr').textContent = '€ ' + fmt(buVergleichsEinkommen * 14) + ' / Jahr (14x)'
+      + (istTeilzeit ? ' · Vollzeit-Äquivalent' : '');
+    document.querySelector('#buEinkommenBlock .res-label').textContent = buEinkommenLabel;
     document.getElementById('buPension').textContent = '€ ' + fmt(buNetto) + ' / Monat';
     document.getElementById('buPensionJahr').textContent = '€ ' + fmt(buNetto * 14) + ' / Jahr (14x)';
     document.getElementById('buLueckeMonat').textContent = '€ ' + fmt(buLuecke) + ' / Monat';
@@ -1175,69 +1333,6 @@ document.getElementById('sendenBtn').addEventListener('click', async () => {
     alert('Fehler: ' + err.message);
   }
 });
-/* ==========================================================================
-   ZUGANGSSCHUTZ – zentral verwaltet über tools-admin
-   ========================================================================== */
-(function(){
-  const TOOL = 'pensionsrechner';
-  const CHECK_URL = 'https://ncudchhyfpokanjtsmpf.supabase.co/functions/v1/check-access';
-
-  const overlay = document.createElement('div');
-  overlay.id = 'zugang-overlay';
-  overlay.style.cssText = 'position:fixed; inset:0; background:#f0f4f8; z-index:9999; display:flex; align-items:center; justify-content:center; padding:24px;';
-  overlay.innerHTML = `
-    <div style="background:#fff; border-radius:8px; padding:32px; max-width:400px; width:100%; box-shadow:0 1px 4px rgba(53,95,143,0.15); font-family:'Lato',Arial,sans-serif;">
-      <div style="font-size:11px; letter-spacing:0.15em; text-transform:uppercase; color:#6b8099; font-weight:700; margin-bottom:14px;">Geschützter Bereich</div>
-      <div style="font-size:15px; color:#1a2a3a; line-height:1.6; margin-bottom:18px;">Bitte geben Sie Ihren persönlichen Zugangscode ein.</div>
-      <input type="text" id="zugang-code" placeholder="Zugangscode" autocomplete="off"
-        style="width:100%; background:#e8eef5; border:1px solid #c8d5e3; border-radius:4px; padding:12px; font-size:16px; font-family:'Lato',Arial,sans-serif; box-sizing:border-box;">
-      <div id="zugang-fehler" style="color:#c0392b; font-size:13px; margin-top:10px; display:none;">Code ungültig oder Zugriff gesperrt.</div>
-      <button id="zugang-btn"
-        style="margin-top:16px; width:100%; background:#355f8f; color:#fff; border:none; border-radius:4px; padding:14px; font-size:14px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer; font-family:'Lato',Arial,sans-serif;">
-        Zugang prüfen</button>
-    </div>`;
-  document.body.appendChild(overlay);
-  document.body.style.overflow = 'hidden';
-
-  async function pruefen(code){
-    try{
-      const res = await fetch(CHECK_URL, {
-        method:'POST', headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({ code, tool: TOOL })
-      });
-      const data = await res.json();
-      return data.ok === true;
-    }catch(e){ return false; }
-  }
-
-  function freigeben(){
-    overlay.remove();
-    document.body.style.overflow = '';
-  }
-
-  async function manuell(){
-    const code = document.getElementById('zugang-code').value.trim();
-    if(!code) return;
-    const btn = document.getElementById('zugang-btn');
-    btn.textContent = 'Wird geprüft...';
-    if(await pruefen(code)){
-      localStorage.setItem('toolZugangsCode', code);
-      freigeben();
-    }else{
-      btn.textContent = 'Zugang prüfen';
-      document.getElementById('zugang-fehler').style.display = 'block';
-    }
-  }
-
-  document.getElementById('zugang-btn').addEventListener('click', manuell);
-  document.getElementById('zugang-code').addEventListener('keydown', e => { if(e.key==='Enter') manuell(); });
-
-  // Gespeicherten Code still prüfen – Sperre wirkt so bei jedem Seitenaufruf
-  const gespeichert = localStorage.getItem('toolZugangsCode');
-  if(gespeichert){
-    pruefen(gespeichert).then(ok => { if(ok) freigeben(); });
-  }
-})();
 </script>
 </body>
 </html>
